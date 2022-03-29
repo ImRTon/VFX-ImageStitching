@@ -3,3 +3,5 @@ opencv-python
 Pillow
 matplotlib
 tqdm
+notebook
+scipy

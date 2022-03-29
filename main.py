@@ -10,18 +10,6 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 import time
 
-def get_parser():
-    parser = argparse.ArgumentParser(description='my description')
-    parser.add_argument('-i', '--input_dir', default='data/parrington', type=str, help='Folder of input images.')
-    parser.add_argument('-p', '--plot', default='False', type=str, help='Whether to plot result or not.')
-    return parser
-
-def imgImportFromPil(img_path: str):
-    pil_img = Image.open(img_path).convert("RGB")
-    cv_img = cv2.cvtColor(np.asarray(pil_img), cv2.COLOR_RGB2BGR)
-    exif = pil_img.getexif()
-    return cv_img
-
 if __name__ == '__main__':
     total_time = 0
     start = time.time()
