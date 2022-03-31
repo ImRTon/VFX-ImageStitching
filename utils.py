@@ -40,5 +40,6 @@ def imshows_plt(imgs):
     return
     
 def list_plt(list):
-    plt.hist(list)
+    index_list = [i for i in range(len(list))]
+    plt.bar(index_list, list)
     plt.show()
