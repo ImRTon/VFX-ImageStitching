@@ -17,13 +17,15 @@ def imgImportFromPil(img_path: str):
     exif = pil_img.getexif()
     return cv_img
 
-def imshow_plt(img):
+def imshow_plt(img, color_bar=False):
     plt.figure(figsize=(10, 8))
     if len(img.shape) > 2:
         plt_img = img[:, :, ::-1]
     else:
         plt_img = img
     plt.imshow(plt_img)
+    if color_bar:
+        plt.colorbar()
     plt.show()
     return
     
@@ -36,3 +38,7 @@ def imshows_plt(imgs):
     plt.colorbar()
     plt.show()
     return
+    
+def list_plt(list):
+    plt.hist(list)
+    plt.show()
