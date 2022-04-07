@@ -34,3 +34,5 @@ pip install -r requirements.txt
 ```
 python main.py -i INPUT_DIR -a ALIGN_IMG_OR_NOT -s SAMPLE_METHOD
 ```
+
+## Code
