@@ -9,11 +9,13 @@ from PIL import Image
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 import time
+import utils
+import SIFT
 
 if __name__ == '__main__':
     total_time = 0
     start = time.time()
-    parser = get_parser()
+    parser = utils.get_parser()
     args = parser.parse_args()
     
     img_contents = []
@@ -32,7 +34,7 @@ if __name__ == '__main__':
         file_lower = file.lower()
         if file_lower.endswith('.jpg') or file_lower.endswith('.png'):
             img_filePath = os.path.join(args.input_dir, file)
-            img = imgImportFromPil(img_filePath)
+            img = utils.imgImportFromPil(img_filePath)
 
             img_contents.append({
                 'filepath': img_filePath,
