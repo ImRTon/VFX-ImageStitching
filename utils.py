@@ -7,7 +7,7 @@ from tqdm import tqdm
 
 def get_parser():
     parser = argparse.ArgumentParser(description='my description')
-    parser.add_argument('-i', '--input_dir', default='data/parrington', type=str, help='Folder of input images.')
+    parser.add_argument('-i', '--input_dir', default='test', type=str, help='Folder of input images.')
     parser.add_argument('-p', '--plot', default='False', type=str, help='Whether to plot result or not.')
     return parser
 
@@ -42,4 +42,19 @@ def imshows_plt(imgs):
 def list_plt(list):
     index_list = [i for i in range(len(list))]
     plt.bar(index_list, list)
+    plt.show()
+
+def plot_matches(matches, total_img):
+    match_img = total_img.copy()
+    offset = total_img.shape[1]/2
+    fig, ax = plt.subplots()
+    ax.set_aspect('equal')
+    ax.imshow(np.array(match_img).astype('uint8')) #　RGB is integer type
+    
+    ax.plot(matches[:, 0, 0], matches[:, 0, 1], 'xr')
+    ax.plot(matches[:, 1, 0] + offset, matches[:, 1, 1], 'xr')
+     
+    ax.plot([matches[:, 0, 0], matches[:, 1, 0] + offset], [matches[:, 0, 1], matches[:, 1, 1]],
+            'r', linewidth=0.5)
+
     plt.show()

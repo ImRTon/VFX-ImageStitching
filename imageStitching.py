@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 
 def compute_homography(keypointPairs):
-    # Construct A matrix
-    # ref: https://cseweb.ucsd.edu/classes/wi07/cse252a/homography_estimation/homography_estimation.pdf
+    # Construct matrix A
+    # Ref: https://cseweb.ucsd.edu/classes/wi07/cse252a/homography_estimation/homography_estimation.pdf
     A = []
     for i in range(len(keypointPairs)):
         p0 = keypointPairs[i][0]

@@ -74,7 +74,7 @@ def to_gaussian_list(img, s = 5, sigma = 1.6, input_blur = 0.5, interval_count =
     sigma_diff = math.sqrt(max(0.01, sigma ** 2 - ((input_blur * 2) ** 2)))
     # Anti alias
     std_img = cv2.GaussianBlur(std_img, (0, 0), sigmaX=sigma_diff)
-    octave_count = int(math.log2(min(width, height)) - 1)
+    octave_count = int(math.log2(min(width, height)) - 3)
     # 2 extra LoGs because we cant scan top and bottom layers
     img_count_perOctave = s + 3
     print(octave_count)
@@ -88,7 +88,7 @@ def to_gaussian_list(img, s = 5, sigma = 1.6, input_blur = 0.5, interval_count =
         # octave
         for j in range(1, img_count_perOctave):
             gaussian_imgs.append(cv2.GaussianBlur(std_img, (0, 0), sigmaX=(sigma * (k ** j))))
-            print("Sigma:", sigma * (k ** j))
+            # print("Sigma:", sigma * (k ** j))
         GaussianOctaves.append(gaussian_imgs)
         DoGs = []
         for j in range(img_count_perOctave - 1):
