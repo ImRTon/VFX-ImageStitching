@@ -13,6 +13,7 @@ def get_parser():
 
 def imgImportFromPil(img_path: str):
     pil_img = Image.open(img_path).convert("RGB")
+    pil_img = pil_img.resize([1500, 1000])
     cv_img = cv2.cvtColor(np.asarray(pil_img), cv2.COLOR_RGB2BGR)
     exif = pil_img.getexif()
     return cv_img
@@ -44,9 +45,8 @@ def list_plt(list):
     plt.bar(index_list, list)
     plt.show()
 
-def plot_matches(matches, total_img):
+def plot_matches(matches, total_img, offset):
     match_img = total_img.copy()
-    offset = total_img.shape[1]/2
     fig, ax = plt.subplots()
     ax.set_aspect('equal')
     ax.imshow(np.array(match_img).astype('uint8')) #　RGB is integer type

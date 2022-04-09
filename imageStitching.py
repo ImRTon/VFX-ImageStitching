@@ -10,10 +10,10 @@ def compute_homography(keypointPairs):
     # Ref: https://cseweb.ucsd.edu/classes/wi07/cse252a/homography_estimation/homography_estimation.pdf
     A = []
     for i in range(len(keypointPairs)):
-        p0 = keypointPairs[i][0]
-        p1 = keypointPairs[i][1]
-        A.append([-p0[0], -p0[1], -1, 0, 0, 0, p1[0]*p0[0], p1[0]*p0[1], p1[0]])
-        A.append([0, 0, 0, -p0[0], -p0[1], -1, p1[1]*p0[0], p1[1]*p0[1], p1[1]])
+        origin = keypointPairs[i][1]
+        target = keypointPairs[i][0]
+        A.append([-origin[0], -origin[1], -1, 0, 0, 0, target[0]*origin[0], target[0]*origin[1], target[0]])
+        A.append([0, 0, 0, -origin[0], -origin[1], -1, target[1]*origin[0], target[1]*origin[1], target[1]])
 
     # solving Ah = 0 using SVD
     u, s, v = np.linalg.svd(A)
@@ -34,7 +34,7 @@ def compute_best_Homography(keypointPairs):
     sampleNum = np.shape(keypointPairs)[0]
     maxInlier = 0
     bestHomography = None
-
+    print("compute best homography")
     progress = tqdm(total=iteration)
 
     for iter in range(iteration):
@@ -46,16 +46,18 @@ def compute_best_Homography(keypointPairs):
         inlierNum = 0
         for i in range(sampleNum):
             if i not in subSampleIndices:
-                p0 = keypointPairs[i][0]
-                p1 = keypointPairs[i][1]
-                dstPoint = Homography @ p0.T
+                origin = keypointPairs[i][1]
+                target = keypointPairs[i][0]
+                origin = np.append(origin, 1)
+                target = np.append(target, 1)
+                dstPoint = Homography @ origin.T
 
                 # prevent to divide by 0 or small value
                 if dstPoint[2] <= 1e-8: 
                     continue
                 dstPoint = dstPoint / dstPoint[2]
                 # calculate Euclidean distance
-                if np.linalg.norm(dstPoint[:2] - p1) < threshold:
+                if np.linalg.norm(dstPoint - target) < threshold:
                     inlierNum = inlierNum + 1
 
             if inlierNum > maxInlier:
@@ -92,11 +94,6 @@ def linear_blending(leftImg, rightImg):
         for j in range(rightWidth):
             if (np.count_nonzero(img_left_mask[i, j]) > 0 and np.count_nonzero(img_right_mask[i, j]) > 0):
                 overlap_mask[i, j] = 1
-    
-    # plot the overlap mask
-    plt.figure(0)
-    plt.title("overlap_mask")
-    plt.imshow(overlap_mask.astype(int), cmap="gray")
     
     # compute the alpha mask to linear blending the overlap region
     alpha_mask = np.zeros((rightHeight, rightWidth)) # alpha value depend on left image
@@ -143,11 +140,6 @@ def linear_blending_np(leftImg, rightImg):
     # find the overlap mask(overlap region of two image)
     overlap_mask = np.logical_and(img_left_mask, img_right_mask).astype(int)
     
-    # plot the overlap mask
-    plt.figure(0)
-    plt.title("overlap_mask")
-    plt.imshow(overlap_mask, cmap="gray")
-    
     # compute the alpha mask to linear blending the overlap region
     # 1到0的線性插值
     alpha_mask = np.zeros((rightHeight, rightWidth))
@@ -169,9 +161,37 @@ def linear_blending_np(leftImg, rightImg):
     blendedImage = np.copy(rightImg)
     blendedImage[:leftHeight, :leftWidth] = np.copy(leftImg)
     # 針對重疊區域做blending
-    blendedImage[:, :] = np.where(overlap_mask[:, :], alpha_mask[:, :] * leftImg[:, :] + (1 - alpha_mask[:, :]) * rightImg[:, :],  blendedImage[:, :])
+    blendedImage[:, :] = np.where(overlap_mask[:, :], alpha_mask[:, :leftImg.shape[1]] * leftImg[:, :] + (1 - alpha_mask[:, :]) * rightImg[:, :],  blendedImage[:, :])
 
     return blendedImage
+
+def removeBlackBorder(img):
+        '''
+            Remove img's the black border 
+        '''
+        h, w = img.shape[:2]
+        reduced_h, reduced_w = h, w
+        # right to left
+        for col in range(w - 1, -1, -1):
+            all_black = True
+            for i in range(h):
+                if (np.count_nonzero(img[i, col]) > 0):
+                    all_black = False
+                    break
+            if (all_black == True):
+                reduced_w = reduced_w - 1
+                
+        # bottom to top 
+        for row in range(h - 1, -1, -1):
+            all_black = True
+            for i in range(reduced_w):
+                if (np.count_nonzero(img[row, i]) > 0):
+                    all_black = False
+                    break
+            if (all_black == True):
+                reduced_h = reduced_h - 1
+        
+        return img[:reduced_h, :reduced_w]
 
 def warp(leftImg, rightImg, homography):
     leftHeight, leftWidth = leftImg.shape[:2]
@@ -181,7 +201,7 @@ def warp(leftImg, rightImg, homography):
     stitchImage = np.zeros((max(leftHeight, rightHeight), leftWidth + rightWidth, 3), dtype=int)
     # 計算反矩陣
     homographyInverse = np.linalg.inv(homography)
-
+    print("warping")
     progress = tqdm(total = stitchImage.shape[0])
     for i in range(stitchImage.shape[0]):
         for j in range(stitchImage.shape[1]):
@@ -199,7 +219,12 @@ def warp(leftImg, rightImg, homography):
             stitchImage[i, j] = rightImg[y, x]
         progress.update(1)
     progress.close()
+    plt.imshow(stitchImage)
+    plt.show()
+    print("blending")
     stitchImage = linear_blending(leftImg, stitchImage)
+    print("remove black border")
+    stitchImage = removeBlackBorder(stitchImage)
     return stitchImage
 
 '''

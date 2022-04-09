@@ -36,14 +36,13 @@ if __name__ == '__main__':
         if file_lower.endswith('.jpg') or file_lower.endswith('.png'):
             img_filePath = os.path.join(args.input_dir, file)
             img = utils.imgImportFromPil(img_filePath)
-
             img_contents.append({
                 'filepath': img_filePath,
                 'data': img,
                 'keypoints': None,
                 'descriptors': None,
             })
-
+    '''
     for img_content in img_contents:
         DoGOctaves, GaussianOctaves = SIFT.to_gaussian_list(img_content['data'])
         magOctaves, sitaOctaves = SIFT.get_gradients(GaussianOctaves)
@@ -86,47 +85,59 @@ if __name__ == '__main__':
         # im_key = cv2.drawKeypoints(imgs, cv_keypoints, np.array([]), (255, 0, 0))
 
         utils.imshow_plt(im_key)
-
+    '''
     # 測試stitching
-    firstImg = img_contents[0]
-    secondImg = img_contents[1]
+    leftImg = img_contents[0]
+    for i in range(1, len(img_contents)):
+        rightImg = img_contents[i]
 
-    # Keypoint matching
-    keypointPairs = []
-    # 使用cv2版本的SIFT測試
-    
-    sift = cv2.xfeatures2d.SIFT_create()
-    kps1, dscrts1 = sift.detectAndCompute(firstImg['data'], None)
-    kps2, dscrts2 = sift.detectAndCompute(secondImg['data'], None)
-    print("keypoint matching")
-    progress = tqdm(total=len(kps1))
-    for i in range(len(kps1)):
-        firstKP = kps1[i].pt
-        targetDescriptor = dscrts1[i]
-        minDistance = 100000.0
-        secondMinDis = 100000.0
-        bestMatchIdx = -1
-
-        for j in range(len(kps2)):
-            descriptor = dscrts2[j]
-            # Calculate Euclidean distance
-            dist = np.linalg.norm(targetDescriptor - descriptor)
-            if dist < minDistance:
-                secondMinDis = minDistance
-                minDistance = dist
-                bestMatchIdx = j
+        # Keypoint matching
+        keypointPairs = []
+        # 使用cv2版本的SIFT測試
         
-        if minDistance / secondMinDis <= 0.2:
-            secondKP = kps2[bestMatchIdx].pt
-            keypointPairs.append([firstKP, secondKP])
-        progress.update(1)
-    
-    progress.close()
-    print("match count:" + str(len(keypointPairs)))
-    total_img = np.concatenate((firstImg['data'], secondImg['data']), axis=1)
-    keypointPairs = np.array(keypointPairs)
-    # Good matches
-    utils.plot_matches(keypointPairs, total_img)
+        sift = cv2.xfeatures2d.SIFT_create()
+        kps1, dscrts1 = sift.detectAndCompute(leftImg['data'], None)
+        kps2, dscrts2 = sift.detectAndCompute(rightImg['data'], None)
+        print("keypoint matching")
+        progress = tqdm(total=len(kps1))
+        for i in range(len(kps1)):
+            firstKP = kps1[i].pt
+            targetDescriptor = dscrts1[i]
+            minDistance = 100000.0
+            secondMinDis = 100000.0
+            bestMatchIdx = -1
+
+            for j in range(len(kps2)):
+                descriptor = dscrts2[j]
+                # Calculate Euclidean distance
+                dist = np.linalg.norm(targetDescriptor - descriptor)
+                if dist < minDistance:
+                    secondMinDis = minDistance
+                    minDistance = dist
+                    bestMatchIdx = j
+            
+            if minDistance / secondMinDis <= 0.3:
+                secondKP = kps2[bestMatchIdx].pt
+                keypointPairs.append([firstKP, secondKP])
+            progress.update(1)
+        
+        progress.close()
+        print("match count:" + str(len(keypointPairs)))
+        total_img = np.concatenate((leftImg['data'], rightImg['data']), axis=1)
+        keypointPairs = np.array(keypointPairs)
+        # Good matches
+        utils.plot_matches(keypointPairs, total_img, leftImg['data'].shape[1])
+
+        # Image stitching
+        bestHomography = imageStitching.compute_best_Homography(keypointPairs)
+        result = imageStitching.warp(leftImg['data'], rightImg['data'], bestHomography).astype(np.uint8)
+        # plot the overlap mask
+        plt.figure(0)
+        plt.title("Result")
+        plt.imshow(result)
+        plt.show()
+        leftImg['data'] = result
+        # plt.imsave("test/result.jpg", result)
     
     '''
     print("keypoint matching")
@@ -159,5 +170,3 @@ if __name__ == '__main__':
     # Good matches
     utils.plot_matches(keypointPairs, total_img)
     '''
-
-    # Image stitching
