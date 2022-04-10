@@ -137,7 +137,7 @@ if __name__ == '__main__':
         '''
         K = np.array([[f,0,w/2],[0,f,h/2],[0,0,1]]) # mock intrinsics
         result = cylindricalWarp(img_contents[i]['data'], K)[:,:,:3]
-        img_contents[i]['data'] = result.copy().astype(np.uint8)
+        #img_contents[i]['data'] = result.copy().astype(np.uint8)
         #plt.imshow(img_contents[i]['data'])
         #plt.show()
 
@@ -165,7 +165,7 @@ if __name__ == '__main__':
         for j in range(len(kps1)):
             firstKP = kps1[j].pt
 
-            if firstKP[0] < leftImg['data'].shape[1] / 3:
+            if firstKP[0] < leftImg['data'].shape[1] / 2:
                 progress.update(1)
                 continue
             targetDescriptor = dscrts1[j]
@@ -185,11 +185,14 @@ if __name__ == '__main__':
         total_img = np.concatenate((leftImg['data'], rightImg['data']), axis=1)
         keypointPairs = np.array(keypointPairs)
         # Good matches
-        utils.plot_matches(keypointPairs, total_img, leftImg['data'].shape[1])
+        #utils.plot_matches(keypointPairs, total_img, leftImg['data'].shape[1])
 
         # Image stitching
         bestHomography = imageStitching.compute_best_Homography(keypointPairs)
         result = imageStitching.warp(leftImg['data'], rightImg['data'], bestHomography).astype(np.uint8)
+        #result = cv2.warpPerspective(rightImg['data'], bestHomography, (leftImg['data'].shape[1] + rightImg['data'].shape[1], leftImg['data'].shape[0]))
+        #result[0:leftImg['data'].shape[0], 0:leftImg['data'].shape[1]] = leftImg['data']
+        result = imageStitching.removeBlackBorder(result)
         # plot the overlap mask
         #plt.figure(0)
         #plt.title("Result")

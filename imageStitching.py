@@ -12,8 +12,9 @@ def compute_homography(keypointPairs):
     for i in range(len(keypointPairs)):
         origin = keypointPairs[i][1]
         target = keypointPairs[i][0]
-        A.append([-origin[0], -origin[1], -1, 0, 0, 0, target[0]*origin[0], target[0]*origin[1], target[0]])
-        A.append([0, 0, 0, -origin[0], -origin[1], -1, target[1]*origin[0], target[1]*origin[1], target[1]])
+        A.append([0, 0, 0, origin[0], origin[1], 1, -target[1]*origin[0], -target[1]*origin[1], -target[1]])
+        A.append([origin[0], origin[1], 1, 0, 0, 0, -target[0]*origin[0], -target[0]*origin[1], -target[0]])
+        
 
     # solving Ah = 0 using SVD
     u, s, v = np.linalg.svd(A)
@@ -38,31 +39,24 @@ def compute_best_Homography(keypointPairs):
     progress = tqdm(total=iteration)
 
     for iter in range(iteration):
-        # pick 4 random number
-        subSampleIndices = random.sample(range(sampleNum), 4)
-        Homography = compute_homography(keypointPairs[subSampleIndices])
-
+        subSampleIndices = random.sample(range(sampleNum), 1)
+        pair = keypointPairs[subSampleIndices[0]]
+        shift = pair[1] - pair[0]
         # compute total inlier for this homography
         inlierNum = 0
         for i in range(sampleNum):
             if i not in subSampleIndices:
                 origin = keypointPairs[i][1]
                 target = keypointPairs[i][0]
-                origin = np.append(origin, 1)
-                target = np.append(target, 1)
-                dstPoint = Homography @ origin.T
+                dstPoint = origin - shift
 
-                # prevent to divide by 0 or small value
-                if dstPoint[2] <= 1e-8: 
-                    continue
-                dstPoint = dstPoint / dstPoint[2]
                 # calculate Euclidean distance
                 if np.linalg.norm(dstPoint - target) < threshold:
                     inlierNum = inlierNum + 1
 
             if inlierNum > maxInlier:
                 maxInlier = inlierNum
-                bestHomography = Homography
+                bestHomography = shift
 
         progress.update(1)
     progress.close()
@@ -202,16 +196,16 @@ def warp(leftImg, rightImg, homography):
     stitchImage = np.zeros((max(leftHeight, rightHeight), leftWidth + rightWidth, 3), dtype=int)
     stitchImage[:leftHeight, :leftWidth] = leftImg
     # 計算反矩陣
-    homographyInverse = np.linalg.inv(homography)
+    #homographyInverse = np.linalg.inv(homography)
     print("warping")
     progress = tqdm(total = stitchImage.shape[0])
     for i in range(stitchImage.shape[0]):
         for j in range(stitchImage.shape[1]):
-            pixel = np.array([j, i, 1])
+            pixel = np.array([j, i])
             # 利用反矩陣計算對應到右邊圖片的座標
-            rightImagePixel = homographyInverse @ pixel
-            rightImagePixel = rightImagePixel / rightImagePixel[2]
-
+            #rightImagePixel = homographyInverse @ pixel
+            #rightImagePixel = rightImagePixel / rightImagePixel[2]
+            rightImagePixel = pixel + homography
             x, y = int(round(rightImagePixel[0])), int(round(rightImagePixel[1]))
 
             # 如果超出圖片的範圍，代表無法找到對應的pxiel
