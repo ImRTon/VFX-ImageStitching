@@ -1,3 +1,4 @@
+from tqdm import tqdm
 import utils
 from IPython.display import Image as DisImage
 import os
@@ -293,7 +294,7 @@ def get_descriptors(keypoints: list, magOctaves, sitaOctaves, bin_count=8, windo
     """
     [pt[2], mag, angle]
     """
-
+    progress = tqdm(total = len(keypoints))
     for keypoint in keypoints:
         bin_pts = []
         mags = []
@@ -376,6 +377,8 @@ def get_descriptors(keypoints: list, magOctaves, sitaOctaves, bin_count=8, windo
         descriptor_vector = np.round(512 * descriptor_vector)
         descriptor_vector = np.clip(descriptor_vector, 0, 255)
         descriptors.append(descriptor_vector)
+        progress.update(1)
+    progress.close()
     return np.array(descriptors, dtype='float32')
 
 

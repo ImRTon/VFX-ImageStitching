@@ -28,7 +28,7 @@ def compute_best_Homography(keypointPairs):
     '''
     # Compute best Homography matrix using RANSAC algorithm
     # 至少需要4組關鍵點pair才能解出一個homography(因為有8個自由度)
-    iteration = 8000
+    iteration = 1000
     # 用來判斷是否為inlier的閾值
     threshold = 0.5
     sampleNum = np.shape(keypointPairs)[0]
@@ -182,6 +182,7 @@ def removeBlackBorder(img):
                 reduced_w = reduced_w - 1
                 
         # bottom to top 
+        
         for row in range(h - 1, -1, -1):
             all_black = True
             for i in range(reduced_w):
@@ -199,6 +200,7 @@ def warp(leftImg, rightImg, homography):
 
     # 計算連接之後的圖片大小
     stitchImage = np.zeros((max(leftHeight, rightHeight), leftWidth + rightWidth, 3), dtype=int)
+    stitchImage[:leftHeight, :leftWidth] = leftImg
     # 計算反矩陣
     homographyInverse = np.linalg.inv(homography)
     print("warping")
@@ -219,20 +221,10 @@ def warp(leftImg, rightImg, homography):
             stitchImage[i, j] = rightImg[y, x]
         progress.update(1)
     progress.close()
-    plt.imshow(stitchImage)
-    plt.show()
+    #plt.imshow(stitchImage)
+    #plt.show()
     print("blending")
     stitchImage = linear_blending(leftImg, stitchImage)
     print("remove black border")
     stitchImage = removeBlackBorder(stitchImage)
     return stitchImage
-
-'''
-預計大致流程:
-stitchImg = imgs[0]
-for i in range(1, len(imgs)):
-    nextImg = img[i]
-    keypointsA, keypointsB = getkeypoints(stitchImg, nextImg)
-    bestH = compute_best_Homography([keypointsA, keypointsB])
-    result = warp(stitchImg, imgs[i], bestH)
-'''
