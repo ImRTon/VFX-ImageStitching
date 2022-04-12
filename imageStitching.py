@@ -1,3 +1,4 @@
+import math
 from random import random
 from cv2 import threshold
 import numpy as np
@@ -112,50 +113,10 @@ def linear_blending(leftImg, rightImg):
     # 針對重疊區域做blending
     for i in range(rightHeight):
         for j in range(rightWidth):
-            if (np.count_nonzero(overlap_mask[i, j]) > 0):
-                blendedImage[i, j] = alpha_mask[i, j] * leftImg[i, j] + (1 - alpha_mask[i, j]) * rightImg[i, j]
-
-    return blendedImage
-
-def linear_blending_np(leftImg, rightImg):
-    '''
-        針對重疊區域做線性插值
-        基本上rightImg傳入的是mapping過後的stitch image
-    '''
-    leftHeight, leftWidth = leftImg.shape[:2]
-    rightHeight, rightWidth = rightImg.shape[:2]
-    img_left_mask = np.zeros((rightHeight, rightWidth), dtype="int")
-    img_right_mask = np.zeros((rightHeight, rightWidth), dtype="int")
-    
-    # find the left image and right image mask region(None zero pixels)
-    img_left_mask[:, :] = np.count_nonzero(leftImg[:, :]) > 0
-    img_right_mask[:, :] = np.count_nonzero(rightImg[:, :]) > 0
-    
-    # find the overlap mask(overlap region of two image)
-    overlap_mask = np.logical_and(img_left_mask, img_right_mask).astype(int)
-    
-    # compute the alpha mask to linear blending the overlap region
-    # 1到0的線性插值
-    alpha_mask = np.zeros((rightHeight, rightWidth))
-    for i in range(rightHeight): 
-        minIdx = maxIdx = -1
-        for j in range(rightWidth):
-            if (overlap_mask[i, j] == 1 and minIdx == -1):
-                minIdx = j
             if (overlap_mask[i, j] == 1):
-                maxIdx = j
-        
-        if (minIdx == maxIdx): # represent this row's pixels are all zero, or only one pixel not zero
-            continue
-            
-        decrease_step = 1 / (maxIdx - minIdx)
-        for j in range(minIdx, maxIdx + 1):
-            alpha_mask[i, j] = 1 - (decrease_step * (j - minIdx))
-    
-    blendedImage = np.copy(rightImg)
-    blendedImage[:leftHeight, :leftWidth] = np.copy(leftImg)
-    # 針對重疊區域做blending
-    blendedImage[:, :] = np.where(overlap_mask[:, :], alpha_mask[:, :leftImg.shape[1]] * leftImg[:, :] + (1 - alpha_mask[:, :]) * rightImg[:, :],  blendedImage[:, :])
+                blendedImage[i, j] = alpha_mask[i, j] * leftImg[i, j] + (1 - alpha_mask[i, j]) * rightImg[i, j]
+            elif (np.count_nonzero(rightImg[i, j]) > 0):
+                blendedImage[i, j] = rightImg[i, j]
 
     return blendedImage
 
@@ -180,18 +141,14 @@ def warp(leftImg, rightImg, homography):
     rightHeight, rightWidth = rightImg.shape[:2]
 
     # 計算連接之後的圖片大小
-    stitchImage = np.zeros((max(leftHeight, rightHeight), leftWidth + rightWidth, 3), dtype=int)
+    stitchImage = np.zeros((round(max(leftHeight, rightHeight + abs(homography[1]))), leftWidth + rightWidth, 3), dtype=int)
     stitchImage[:leftHeight, :leftWidth] = leftImg
-    # 計算反矩陣
-    #homographyInverse = np.linalg.inv(homography)
+
     print("warping")
     progress = tqdm(total = stitchImage.shape[0])
     for i in range(stitchImage.shape[0]):
         for j in range(stitchImage.shape[1]):
             pixel = np.array([j, i])
-            # 利用反矩陣計算對應到右邊圖片的座標
-            #rightImagePixel = homographyInverse @ pixel
-            #rightImagePixel = rightImagePixel / rightImagePixel[2]
             rightImagePixel = pixel + homography
             x, y = int(round(rightImagePixel[0])), int(round(rightImagePixel[1]))
 

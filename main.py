@@ -135,9 +135,10 @@ if __name__ == '__main__':
         #plt.imshow(img_contents[i]['data'])
         #plt.show()
 
-    # 測試stitching
-    leftImg = img_contents[0]
+    # 計算鄰近圖之間的最佳offset
+    offsets = []
     for i in range(1, len(img_contents)):
+        leftImg = img_contents[i - 1]
         rightImg = img_contents[i]
 
         # Keypoint matching
@@ -158,17 +159,13 @@ if __name__ == '__main__':
         progress = tqdm(total=len(kps1))
         for j in range(len(kps1)):
             firstKP = kps1[j].pt
-
-            if firstKP[0] < leftImg['data'].shape[1] / 2:
-                progress.update(1)
-                continue
             targetDescriptor = dscrts1[j]
             
             # kd-tree
             tree = spatial.KDTree(dscrts2)
             distance, resultIdx = tree.query(targetDescriptor, 2)
             
-            if distance[0] / distance[1] <= 0.8:
+            if distance[0] / distance[1] <= 0.6:
                 secondKP = kps2[resultIdx[0]].pt
                 keypointPairs.append([firstKP, secondKP])
             
@@ -176,25 +173,22 @@ if __name__ == '__main__':
         
         progress.close()
         print("match count:" + str(len(keypointPairs)))
-        total_img = np.concatenate((leftImg['data'], rightImg['data']), axis=1)
         keypointPairs = np.array(keypointPairs)
         # Good matches
         #utils.plot_matches(keypointPairs, total_img, leftImg['data'].shape[1])
 
-        # Image stitching
         bestHomography = imageStitching.compute_best_Homography(keypointPairs)
-        plt.imshow(leftImg['data'])
-        plt.show()
-        plt.imshow(rightImg['data'])
-        plt.show()
-        result = imageStitching.warp(leftImg['data'], rightImg['data'], bestHomography).astype(np.uint8)
-        #result = cv2.warpPerspective(rightImg['data'], bestHomography, (leftImg['data'].shape[1] + rightImg['data'].shape[1], leftImg['data'].shape[0]))
-        #result[0:leftImg['data'].shape[0], 0:leftImg['data'].shape[1]] = leftImg['data']
-        #result = imageStitching.removeBlackBorder(result)
-        # plot the overlap mask
-        #plt.figure(0)
-        #plt.title("Result")
-        #plt.imshow(result)
-        #plt.show()
+        offsets.append(bestHomography)
+
+    # Image stitching
+    leftImg = img_contents[0]
+    offset = np.zeros((2))
+    for i in range(1, len(img_contents)):
+        print("stitching %d" % i)
+        offset = offset + offsets[i - 1]
+        leftImg = img_contents[i - 1]
+        rightImg = img_contents[i]
+        result = imageStitching.warp(leftImg['data'], rightImg['data'], offset).astype(np.uint8)
         leftImg['data'] = result
         plt.imsave("test2/result%s.jpg" % str(i), result)
+        
