@@ -161,32 +161,19 @@ def linear_blending_np(leftImg, rightImg):
 
 def removeBlackBorder(img):
         '''
-            Remove img's the black border 
+            Remove img's black border 
         '''
-        h, w = img.shape[:2]
-        reduced_h, reduced_w = h, w
-        # right to left
-        for col in range(w - 1, -1, -1):
-            all_black = True
-            for i in range(h):
-                if (np.count_nonzero(img[i, col]) > 0):
-                    all_black = False
-                    break
-            if (all_black == True):
-                reduced_w = reduced_w - 1
-                
-        # bottom to top 
-        
-        for row in range(h - 1, -1, -1):
-            all_black = True
-            for i in range(reduced_w):
-                if (np.count_nonzero(img[row, i]) > 0):
-                    all_black = False
-                    break
-            if (all_black == True):
-                reduced_h = reduced_h - 1
-        
-        return img[:reduced_h, :reduced_w]
+        h, w, d = img.shape
+        #left limit
+        for i in range(w):
+            if np.sum(img[:,i,:]) > 0:
+                break
+        #right limit
+        for j in range(w-1, 0, -1):
+            if np.sum(img[:,j,:]) > 0:
+                break
+
+        return img[:,i:j+1,:].copy()
 
 def warp(leftImg, rightImg, homography):
     leftHeight, leftWidth = leftImg.shape[:2]

@@ -79,6 +79,19 @@ def cylindricalWarp(img, K):
     # warp the image according to cylindrical coords
     return cv2.remap(img_rgba, B[:,:,0].astype(np.float32), B[:,:,1].astype(np.float32), cv2.INTER_AREA, borderMode=cv2.BORDER_TRANSPARENT)
 
+def cylindricalWarpV2(img, f):
+    h, w = img.shape[:2]
+    result = np.zeros((h, w, 3))
+    x_c = w / 2
+    y_c = h / 2
+
+    for y in range(h):
+        for x in range(w):
+            x_b = f * math.atan((x - x_c) / f) + x_c
+            y_b = f * (y - y_c) / math.sqrt((x - x_c) * (x - x_c) + f * f) + y_c
+            result[round(y_b), round(x_b), :] = img[y, x, :]
+    return result
+
 
 if __name__ == '__main__':
     total_time = 0
@@ -116,28 +129,9 @@ if __name__ == '__main__':
     for i in range(len(img_contents)):
         h, w = img_contents[i]['data'].shape[:2]
         f = focals[i]
-        '''
-        result = np.zeros(img_contents[i]['data'].shape, dtype=int)
-        h, w = result.shape[:2]
-        hShift = h / 2.0
-        wShift = w / 2.0
-        for row in range(h):
-            for col in range(w):
-                old_x = col - wShift
-                old_y = row - hShift
-                f = focals[i]
-                x = f * math.atan(old_x / f)
-                y = f * old_y / math.sqrt(old_x * old_x + f * f)
-                x = round(x + wShift)
-                y = round(y + hShift)
-                if x >= 0 and x < w and y >= 0 and y < h:
-                    result[y, x, :] = img_contents[i]['data'][row, col, :]
+        result = cylindricalWarpV2(img_contents[i]['data'], f)
         result = imageStitching.removeBlackBorder(result)
         img_contents[i]['data'] = result.copy().astype(np.uint8)
-        '''
-        K = np.array([[f,0,w/2],[0,f,h/2],[0,0,1]]) # mock intrinsics
-        result = cylindricalWarp(img_contents[i]['data'], K)[:,:,:3]
-        #img_contents[i]['data'] = result.copy().astype(np.uint8)
         #plt.imshow(img_contents[i]['data'])
         #plt.show()
 
@@ -148,8 +142,8 @@ if __name__ == '__main__':
 
         # Keypoint matching
         keypointPairs = []
+
         # 使用cv2版本的SIFT測試
-        
         sift = cv2.xfeatures2d.SIFT_create()
         kps1, dscrts1 = sift.detectAndCompute(leftImg['data'], None)
         kps2, dscrts2 = sift.detectAndCompute(rightImg['data'], None)
@@ -189,10 +183,14 @@ if __name__ == '__main__':
 
         # Image stitching
         bestHomography = imageStitching.compute_best_Homography(keypointPairs)
+        plt.imshow(leftImg['data'])
+        plt.show()
+        plt.imshow(rightImg['data'])
+        plt.show()
         result = imageStitching.warp(leftImg['data'], rightImg['data'], bestHomography).astype(np.uint8)
         #result = cv2.warpPerspective(rightImg['data'], bestHomography, (leftImg['data'].shape[1] + rightImg['data'].shape[1], leftImg['data'].shape[0]))
         #result[0:leftImg['data'].shape[0], 0:leftImg['data'].shape[1]] = leftImg['data']
-        result = imageStitching.removeBlackBorder(result)
+        #result = imageStitching.removeBlackBorder(result)
         # plot the overlap mask
         #plt.figure(0)
         #plt.title("Result")
@@ -200,35 +198,3 @@ if __name__ == '__main__':
         #plt.show()
         leftImg['data'] = result
         plt.imsave("test2/result%s.jpg" % str(i), result)
-    
-    '''
-    print("keypoint matching")
-    progress = tqdm(total=len(firstImg['keypoints']))
-    for i in range(len(firstImg['keypoints'])):
-        firstKP = firstImg['keypoints'][i].pt
-        targetDescriptor = firstImg['descriptors'][i]
-        minDistance = 100000.0
-        secondMinDis = 100000.0
-        bestMatchIdx = -1
-
-        for j in range(len(secondImg['keypoints'])):
-            descriptor = secondImg['descriptors'][j]
-            # Calculate Euclidean distance
-            dist = np.linalg.norm(targetDescriptor - descriptor)
-            if dist < minDistance:
-                secondMinDis = minDistance
-                minDistance = dist
-                bestMatchIdx = j
-        
-        if minDistance / secondMinDis <= 0.2:
-            secondKP = secondImg['keypoints'][bestMatchIdx].pt
-            keypointPairs.append([firstKP, secondKP])
-        progress.update(1)
-    
-    progress.close()
-    print("match count:" + str(len(keypointPairs)))
-    total_img = np.concatenate((firstImg['data'], secondImg['data']), axis=1)
-    keypointPairs = np.array(keypointPairs)
-    # Good matches
-    utils.plot_matches(keypointPairs, total_img)
-    '''
