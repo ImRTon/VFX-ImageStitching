@@ -130,7 +130,7 @@ if __name__ == '__main__':
         h, w = img_contents[i]['data'].shape[:2]
         f = focals[i]
         result = cylindricalWarpV2(img_contents[i]['data'], f)
-        result = imageStitching.removeBlackBorder(result)
+        result = imageStitching.removeBlackBorderLR(result)
         img_contents[i]['data'] = result.copy().astype(np.uint8)
         #plt.imshow(img_contents[i]['data'])
         #plt.show()
@@ -182,13 +182,26 @@ if __name__ == '__main__':
 
     # Image stitching
     leftImg = img_contents[0]
+    offsets = np.array(offsets)
     offset = np.zeros((2))
+
+    (x, y) = np.sum(offsets, axis=0)
+    alpha = y / x
     for i in range(1, len(img_contents)):
         print("stitching %d" % i)
         offset = offset + offsets[i - 1]
-        leftImg = img_contents[i - 1]
         rightImg = img_contents[i]
         result = imageStitching.warp(leftImg['data'], rightImg['data'], offset).astype(np.uint8)
         leftImg['data'] = result
         plt.imsave("test2/result%s.jpg" % str(i), result)
+
+    no_drift_result = np.zeros(leftImg['data'].shape, dtype=np.uint8)
+    h, w, d = leftImg['data'].shape
+    for y in range(h):
+        for x in range(w):
+            y_p = round(y - alpha * x)
+            if y_p >= 0 and y_p < h:
+                no_drift_result[y_p, x, :] = leftImg['data'][y, x, :]
+    no_drift_result = imageStitching.removeBlackBorderTB(no_drift_result)
+    plt.imsave("test2/no_drift_result.jpg", no_drift_result)
         

@@ -6,24 +6,6 @@ import random
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 
-def compute_homography(keypointPairs):
-    # Construct matrix A
-    # Ref: https://cseweb.ucsd.edu/classes/wi07/cse252a/homography_estimation/homography_estimation.pdf
-    A = []
-    for i in range(len(keypointPairs)):
-        origin = keypointPairs[i][1]
-        target = keypointPairs[i][0]
-        A.append([0, 0, 0, origin[0], origin[1], 1, -target[1]*origin[0], -target[1]*origin[1], -target[1]])
-        A.append([origin[0], origin[1], 1, 0, 0, 0, -target[0]*origin[0], -target[0]*origin[1], -target[0]])
-        
-
-    # solving Ah = 0 using SVD
-    u, s, v = np.linalg.svd(A)
-    Homography = np.reshape(v[-1], (3, 3))
-    Homography = Homography / Homography[2, 2]
-
-    return Homography
-
 def compute_best_Homography(keypointPairs):
     '''
         keypointPairs: npArray of matched keypoint pairs
@@ -63,7 +45,7 @@ def compute_best_Homography(keypointPairs):
     progress.close()
     return bestHomography
 
-def linear_blending(leftImg, rightImg):
+def linear_blending(leftImg, rightImg, offset):
     '''
         針對重疊區域做線性插值
         基本上rightImg傳入的是mapping過後的stitch image
@@ -86,7 +68,7 @@ def linear_blending(leftImg, rightImg):
     # find the overlap mask(overlap region of two image)
     overlap_mask = np.zeros((rightHeight, rightWidth), dtype="int")
     for i in range(rightHeight):
-        for j in range(rightWidth):
+        for j in range(rightWidth, rightWidth):
             if (np.count_nonzero(img_left_mask[i, j]) > 0 and np.count_nonzero(img_right_mask[i, j]) > 0):
                 overlap_mask[i, j] = 1
     
@@ -120,9 +102,9 @@ def linear_blending(leftImg, rightImg):
 
     return blendedImage
 
-def removeBlackBorder(img):
+def removeBlackBorderLR(img):
         '''
-            Remove img's black border 
+            Remove img's left and right black border 
         '''
         h, w, d = img.shape
         #left limit
@@ -136,20 +118,36 @@ def removeBlackBorder(img):
 
         return img[:,i:j+1,:].copy()
 
-def warp(leftImg, rightImg, homography):
+def removeBlackBorderTB(img):
+        '''
+            Remove img's top and bottom black border 
+        '''
+        h, w, d = img.shape
+        #left limit
+        for i in range(h):
+            if np.sum(img[i,:,:]) > 0:
+                break
+        #right limit
+        for j in range(h-1, 0, -1):
+            if np.sum(img[j,:,:]) > 0:
+                break
+
+        return img[i:j+1,:,:].copy()
+
+def warp(leftImg, rightImg, offset):
     leftHeight, leftWidth = leftImg.shape[:2]
     rightHeight, rightWidth = rightImg.shape[:2]
 
     # 計算連接之後的圖片大小
-    stitchImage = np.zeros((round(max(leftHeight, rightHeight + abs(homography[1]))), leftWidth + rightWidth, 3), dtype=int)
+    stitchImage = np.zeros((round(max(leftHeight, rightHeight + abs(offset[1]))), leftWidth + rightWidth, 3), dtype=int)
     stitchImage[:leftHeight, :leftWidth] = leftImg
 
     print("warping")
     progress = tqdm(total = stitchImage.shape[0])
     for i in range(stitchImage.shape[0]):
-        for j in range(stitchImage.shape[1]):
+        for j in range(leftWidth + math.floor(offset[0]), leftWidth + math.floor(offset[0]) + rightWidth):
             pixel = np.array([j, i])
-            rightImagePixel = pixel + homography
+            rightImagePixel = pixel + offset
             x, y = int(round(rightImagePixel[0])), int(round(rightImagePixel[1]))
 
             # 如果超出圖片的範圍，代表無法找到對應的pxiel
@@ -162,7 +160,7 @@ def warp(leftImg, rightImg, homography):
     #plt.imshow(stitchImage)
     #plt.show()
     print("blending")
-    stitchImage = linear_blending(leftImg, stitchImage)
+    stitchImage = linear_blending(leftImg, stitchImage, offset)
     print("remove black border")
-    stitchImage = removeBlackBorder(stitchImage)
+    stitchImage = removeBlackBorderLR(stitchImage)
     return stitchImage
