@@ -123,8 +123,7 @@ if __name__ == '__main__':
                 'descriptors': None,
             })
 
-    focals = [705.102, 704.537, 704.847, 704.676, 704.289, 703.895, 704.696, 704.325, 703.794, 
-704.696, 705.327, 705.645, 706.587, 706.645, 705.849, 706.286, 704.916, 705.576]
+    focals = [2600, 2600, 2600, 2600, 2600, 2600, 2600, 2600]
     # map to cylinder
     for i in range(len(img_contents)):
         h, w = img_contents[i]['data'].shape[:2]
@@ -145,16 +144,16 @@ if __name__ == '__main__':
         keypointPairs = []
 
         # 使用cv2版本的SIFT測試
-        sift = cv2.xfeatures2d.SIFT_create()
-        kps1, dscrts1 = sift.detectAndCompute(leftImg['data'], None)
-        kps2, dscrts2 = sift.detectAndCompute(rightImg['data'], None)
-        #GetKeyPointAndDescriptor(leftImg)
-        #GetKeyPointAndDescriptor(rightImg)
-        #kps1 = leftImg['keypoints']
-        #kps2 = rightImg['keypoints']
-        #dscrts1 = leftImg['descriptors']
-        #dscrts2 = rightImg['descriptors']
-        print("keypoint matching")       
+        #sift = cv2.xfeatures2d.SIFT_create()
+        #kps1, dscrts1 = sift.detectAndCompute(leftImg['data'], None)
+        #kps2, dscrts2 = sift.detectAndCompute(rightImg['data'], None)
+        GetKeyPointAndDescriptor(leftImg)
+        GetKeyPointAndDescriptor(rightImg)
+        kps1 = leftImg['keypoints']
+        kps2 = rightImg['keypoints']
+        dscrts1 = leftImg['descriptors']
+        dscrts2 = rightImg['descriptors']
+        print("keypoint matching")
 
         progress = tqdm(total=len(kps1))
         for j in range(len(kps1)):
@@ -165,7 +164,7 @@ if __name__ == '__main__':
             tree = spatial.KDTree(dscrts2)
             distance, resultIdx = tree.query(targetDescriptor, 2)
             
-            if distance[0] / distance[1] <= 0.6:
+            if distance[0] / distance[1] <= 0.3:
                 secondKP = kps2[resultIdx[0]].pt
                 keypointPairs.append([firstKP, secondKP])
             
@@ -174,8 +173,9 @@ if __name__ == '__main__':
         progress.close()
         print("match count:" + str(len(keypointPairs)))
         keypointPairs = np.array(keypointPairs)
+        total_img = np.concatenate((leftImg['data'], rightImg['data']), axis=1)
         # Good matches
-        #utils.plot_matches(keypointPairs, total_img, leftImg['data'].shape[1])
+        utils.plot_matches(keypointPairs, total_img, leftImg['data'].shape[1])
 
         bestHomography = imageStitching.compute_best_Homography(keypointPairs)
         offsets.append(bestHomography)
@@ -193,7 +193,7 @@ if __name__ == '__main__':
         rightImg = img_contents[i]
         result = imageStitching.warp(leftImg['data'], rightImg['data'], offset).astype(np.uint8)
         leftImg['data'] = result
-        plt.imsave("test2/result%s.jpg" % str(i), result)
+        plt.imsave("ours/result%s.jpg" % str(i), result)
 
     no_drift_result = np.zeros(leftImg['data'].shape, dtype=np.uint8)
     h, w, d = leftImg['data'].shape
@@ -203,5 +203,5 @@ if __name__ == '__main__':
             if y_p >= 0 and y_p < h:
                 no_drift_result[y_p, x, :] = leftImg['data'][y, x, :]
     no_drift_result = imageStitching.removeBlackBorderTB(no_drift_result)
-    plt.imsave("test2/no_drift_result.jpg", no_drift_result)
+    plt.imsave("ours/no_drift_result.jpg", no_drift_result)
         

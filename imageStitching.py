@@ -12,7 +12,7 @@ def compute_best_Homography(keypointPairs):
     '''
     # Compute best Homography matrix using RANSAC algorithm
     # 至少需要4組關鍵點pair才能解出一個homography(因為有8個自由度)
-    iteration = 1000
+    iteration = 3000
     # 用來判斷是否為inlier的閾值
     threshold = 0.5
     sampleNum = np.shape(keypointPairs)[0]

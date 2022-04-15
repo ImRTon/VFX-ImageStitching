@@ -7,13 +7,13 @@ from tqdm import tqdm
 
 def get_parser():
     parser = argparse.ArgumentParser(description='my description')
-    parser.add_argument('-i', '--input_dir', default='test2', type=str, help='Folder of input images.')
+    parser.add_argument('-i', '--input_dir', default='ours', type=str, help='Folder of input images.')
     parser.add_argument('-p', '--plot', default='False', type=str, help='Whether to plot result or not.')
     return parser
 
 def imgImportFromPil(img_path: str):
     pil_img = Image.open(img_path).convert("RGB")
-    #pil_img = pil_img.resize([1500, 1000])
+    pil_img = pil_img.resize([1500, 1000])
     cv_img = cv2.cvtColor(np.asarray(pil_img), cv2.COLOR_RGB2BGR)
     exif = pil_img.getexif()
     return cv_img
