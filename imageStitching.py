@@ -6,18 +6,22 @@ import random
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 
-def compute_best_Homography(keypointPairs):
+def compute_best_Translate(keypointPairs):
     '''
-        keypointPairs: npArray of matched keypoint pairs
+        Compute best translate vector using RANSAC algorithm
+        需要1組關鍵點pair來解
+        
+        args:
+            keypointPairs: npArray of matched keypoint pairs
     '''
-    # Compute best Homography matrix using RANSAC algorithm
-    # 至少需要4組關鍵點pair才能解出一個homography(因為有8個自由度)
+
+    # RANSAC迭代次數
     iteration = 3000
     # 用來判斷是否為inlier的閾值
-    threshold = 0.5
+    threshold = 0.5 
     sampleNum = np.shape(keypointPairs)[0]
     maxInlier = 0
-    bestHomography = None
+    bestTranslate = None
     print("compute best homography")
     progress = tqdm(total=iteration)
 
@@ -39,13 +43,13 @@ def compute_best_Homography(keypointPairs):
 
             if inlierNum > maxInlier:
                 maxInlier = inlierNum
-                bestHomography = shift
+                bestTranslate = shift
 
         progress.update(1)
     progress.close()
-    return bestHomography
+    return bestTranslate
 
-def linear_blending_np(leftImg, rightImg, offset):
+def linear_blending(leftImg, rightImg):
     '''
         針對重疊區域做線性插值
         基本上rightImg傳入的是mapping過後的stitch image
@@ -60,7 +64,6 @@ def linear_blending_np(leftImg, rightImg, offset):
     non_black_pixels_mask = np.any(rightImg != [0, 0, 0], axis=-1)
     img_right_mask[non_black_pixels_mask] = 1
 
-    #overlap_mask[:,:leftWidth] = np.where(np.count_nonzero(img_left_mask[:,:]) > 0 and np.count_nonzero(img_right_mask[:,:leftWidth]) > 0)
     overlap_mask = np.logical_and(img_left_mask, img_right_mask).astype(np.uint8)
 
     # compute the alpha mask to linear blending the overlap region
@@ -149,7 +152,7 @@ def warp(leftImg, rightImg, offset):
     #plt.imshow(stitchImage)
     #plt.show()
     print("blending")
-    stitchImage = linear_blending_np(leftImg, stitchImage, offset)
+    stitchImage = linear_blending(leftImg, stitchImage)
     print("remove black border")
     stitchImage = removeBlackBorderLR(stitchImage)
     return stitchImage

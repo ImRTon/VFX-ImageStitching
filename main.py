@@ -57,29 +57,7 @@ def GetKeyPointAndDescriptor(img_content):
 
     utils.imshow_plt(im_key)
 
-
-def cylindricalWarp(img, K):
-    """This function returns the cylindrical warp for a given image and intrinsics matrix K"""
-    h_,w_ = img.shape[:2]
-    # pixel coordinates
-    y_i, x_i = np.indices((h_,w_))
-    X = np.stack([x_i,y_i,np.ones_like(x_i)],axis=-1).reshape(h_*w_,3) # to homog
-    Kinv = np.linalg.inv(K) 
-    X = Kinv.dot(X.T).T # normalized coords
-    # calculate cylindrical coords (sin\theta, h, cos\theta)
-    A = np.stack([np.sin(X[:,0]),X[:,1],np.cos(X[:,0])],axis=-1).reshape(w_*h_,3)
-    B = K.dot(A.T).T # project back to image-pixels plane
-    # back from homog coords
-    B = B[:,:-1] / B[:,[-1]]
-    # make sure warp coords only within image bounds
-    B[(B[:,0] < 0) | (B[:,0] >= w_) | (B[:,1] < 0) | (B[:,1] >= h_)] = -1
-    B = B.reshape(h_,w_,-1)
-    
-    img_rgba = cv2.cvtColor(img,cv2.COLOR_BGR2BGRA) # for transparent borders...
-    # warp the image according to cylindrical coords
-    return cv2.remap(img_rgba, B[:,:,0].astype(np.float32), B[:,:,1].astype(np.float32), cv2.INTER_AREA, borderMode=cv2.BORDER_TRANSPARENT)
-
-def cylindricalWarpV2(img, f):
+def cylindricalWarp(img, f):
     h, w = img.shape[:2]
     result = np.zeros((h, w, 3))
     x_c = w / 2
@@ -122,13 +100,18 @@ if __name__ == '__main__':
                 'keypoints': None,
                 'descriptors': None,
             })
-
+    # example focals
+    # focals = [705.102, 704.537, 704.847, 704.676, 704.289, 703.895, 704.696, 704.325, 703.794, 
+    # 704.696, 705.327, 705.645, 706.587, 706.645, 705.849, 706.286, 704.916, 705.576]
+    
+    # our focals
     focals = [2600, 2600, 2600, 2600, 2600, 2600, 2600, 2600]
-    # map to cylinder
+
+    # Map to cylinder
     for i in range(len(img_contents)):
         h, w = img_contents[i]['data'].shape[:2]
         f = focals[i]
-        result = cylindricalWarpV2(img_contents[i]['data'], f)
+        result = cylindricalWarp(img_contents[i]['data'], f)
         result = imageStitching.removeBlackBorderLR(result)
         img_contents[i]['data'] = result.copy().astype(np.uint8)
         #plt.imshow(img_contents[i]['data'])
@@ -147,6 +130,8 @@ if __name__ == '__main__':
         #sift = cv2.xfeatures2d.SIFT_create()
         #kps1, dscrts1 = sift.detectAndCompute(leftImg['data'], None)
         #kps2, dscrts2 = sift.detectAndCompute(rightImg['data'], None)
+
+        # 我們的SIFT版本
         GetKeyPointAndDescriptor(leftImg)
         GetKeyPointAndDescriptor(rightImg)
         kps1 = leftImg['keypoints']
@@ -155,6 +140,7 @@ if __name__ == '__main__':
         dscrts2 = rightImg['descriptors']
         print("keypoint matching")
 
+        # Keypoint match
         progress = tqdm(total=len(kps1))
         for j in range(len(kps1)):
             firstKP = kps1[j].pt
@@ -177,8 +163,8 @@ if __name__ == '__main__':
         # Good matches
         utils.plot_matches(keypointPairs, total_img, leftImg['data'].shape[1])
 
-        bestHomography = imageStitching.compute_best_Homography(keypointPairs)
-        offsets.append(bestHomography)
+        bestTranslate = imageStitching.compute_best_Translate(keypointPairs)
+        offsets.append(bestTranslate)
 
     # Image stitching
     leftImg = img_contents[0]
@@ -193,8 +179,9 @@ if __name__ == '__main__':
         rightImg = img_contents[i]
         result = imageStitching.warp(leftImg['data'], rightImg['data'], offset).astype(np.uint8)
         leftImg['data'] = result
-        plt.imsave("ours/result%s.jpg" % str(i), result)
+        plt.imsave(os.path.join(args.input_dir, "result%s.jpg" % str(i)), result)
 
+    # 處理每次Stitching產生的Y軸下移問題
     no_drift_result = np.zeros(leftImg['data'].shape, dtype=np.uint8)
     h, w, d = leftImg['data'].shape
     for y in range(h):
@@ -203,5 +190,5 @@ if __name__ == '__main__':
             if y_p >= 0 and y_p < h:
                 no_drift_result[y_p, x, :] = leftImg['data'][y, x, :]
     no_drift_result = imageStitching.removeBlackBorderTB(no_drift_result)
-    plt.imsave("ours/no_drift_result.jpg", no_drift_result)
+    plt.imsave(os.path.join(args.input_dir, "no_drift_result.jpg"), no_drift_result)
         
