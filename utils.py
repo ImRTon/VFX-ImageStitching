@@ -9,6 +9,7 @@ def get_parser():
     parser = argparse.ArgumentParser(description='my description')
     parser.add_argument('-i', '--input_dir', default='ours', type=str, help='Folder of input images.')
     parser.add_argument('-p', '--plot', default='False', type=str, help='Whether to plot result or not.')
+    parser.add_argument('-r', '--match_ratio', default=0.6, type=float, help='Ratio for keypoint matching.')
     return parser
 
 def imgImportFromPil(img_path: str):

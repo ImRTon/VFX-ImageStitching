@@ -127,17 +127,19 @@ if __name__ == '__main__':
         keypointPairs = []
 
         # 使用cv2版本的SIFT測試
-        #sift = cv2.xfeatures2d.SIFT_create()
-        #kps1, dscrts1 = sift.detectAndCompute(leftImg['data'], None)
-        #kps2, dscrts2 = sift.detectAndCompute(rightImg['data'], None)
+        sift = cv2.xfeatures2d.SIFT_create()
+        kps1, dscrts1 = sift.detectAndCompute(leftImg['data'], None)
+        kps2, dscrts2 = sift.detectAndCompute(rightImg['data'], None)
 
         # 我們的SIFT版本
+        '''
         GetKeyPointAndDescriptor(leftImg)
         GetKeyPointAndDescriptor(rightImg)
         kps1 = leftImg['keypoints']
         kps2 = rightImg['keypoints']
         dscrts1 = leftImg['descriptors']
         dscrts2 = rightImg['descriptors']
+        '''
         print("keypoint matching")
 
         # Keypoint match
@@ -150,7 +152,7 @@ if __name__ == '__main__':
             tree = spatial.KDTree(dscrts2)
             distance, resultIdx = tree.query(targetDescriptor, 2)
             
-            if distance[0] / distance[1] <= 0.3:
+            if distance[0] / distance[1] <= args.match_ratio:
                 secondKP = kps2[resultIdx[0]].pt
                 keypointPairs.append([firstKP, secondKP])
             
@@ -161,7 +163,8 @@ if __name__ == '__main__':
         keypointPairs = np.array(keypointPairs)
         total_img = np.concatenate((leftImg['data'], rightImg['data']), axis=1)
         # Good matches
-        utils.plot_matches(keypointPairs, total_img, leftImg['data'].shape[1])
+        if args.plot == 'True':
+            utils.plot_matches(keypointPairs, total_img, leftImg['data'].shape[1])
 
         bestTranslate = imageStitching.compute_best_Translate(keypointPairs)
         offsets.append(bestTranslate)
