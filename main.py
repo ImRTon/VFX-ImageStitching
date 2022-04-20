@@ -163,8 +163,8 @@ if __name__ == '__main__':
         keypointPairs = np.array(keypointPairs)
         total_img = np.concatenate((leftImg['data'], rightImg['data']), axis=1)
         # Good matches
-        if args.plot == 'True':
-            utils.plot_matches(keypointPairs, total_img, leftImg['data'].shape[1])
+        #if args.plot == 'True':
+        utils.plot_matches(keypointPairs, total_img, leftImg['data'].shape[1])
 
         bestTranslate = imageStitching.compute_best_Translate(keypointPairs)
         offsets.append(bestTranslate)

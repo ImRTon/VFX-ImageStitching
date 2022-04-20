@@ -7,14 +7,14 @@ from tqdm import tqdm
 
 def get_parser():
     parser = argparse.ArgumentParser(description='my description')
-    parser.add_argument('-i', '--input_dir', default='ours', type=str, help='Folder of input images.')
+    parser.add_argument('-i', '--input_dir', default='test3', type=str, help='Folder of input images.')
     parser.add_argument('-p', '--plot', default='False', type=str, help='Whether to plot result or not.')
-    parser.add_argument('-r', '--match_ratio', default=0.6, type=float, help='Ratio for keypoint matching.')
+    parser.add_argument('-r', '--match_ratio', default=0.9, type=float, help='Ratio for keypoint matching.')
     return parser
 
 def imgImportFromPil(img_path: str):
     pil_img = Image.open(img_path).convert("RGB")
-    pil_img = pil_img.resize([1500, 1000])
+    pil_img = pil_img.resize([1000, 1500])
     cv_img = cv2.cvtColor(np.asarray(pil_img), cv2.COLOR_RGB2BGR)
     exif = pil_img.getexif()
     return cv_img
