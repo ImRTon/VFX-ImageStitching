@@ -2,14 +2,15 @@
 
 ## 演算法
 整體架構由 `main.py` 作為主要程式執行的區塊，而依據不同功能切割成 `utils.py`、`SIFT.py`、`imageStitching.py` 三個檔案。
-程式執行首先會透過 argparse 取出我們所需要的參數，如圖片資料夾、用於配對Keypoint的Ratio等。
+程式執行首先會透過 argparse 取出我們所需要的參數，如圖片資料夾、用於配對Keypoint的Ratio、圖片的焦距等。
 
 ```python
 def get_parser():
     parser = argparse.ArgumentParser(description='my description')
-    parser.add_argument('-i', '--input_dir', default='ours', type=str, help='Folder of input images.')
+    parser.add_argument('-i', '--input_dir', default='test2', type=str, help='Folder of input images.')
     parser.add_argument('-p', '--plot', default='False', type=str, help='Whether to plot result or not.')
     parser.add_argument('-r', '--match_ratio', default=0.6, type=float, help='Ratio for keypoint matching.')
+    parser.add_argument('-f', '--focal_length', default=705, type=float, help='focal length of image.')
     return parser
 ```
 
