@@ -75,7 +75,7 @@ def to_gaussian_list(img, s = 5, sigma = 1.6, input_blur = 0.5, interval_count =
     sigma_diff = math.sqrt(max(0.01, sigma ** 2 - ((input_blur * 2) ** 2)))
     # Anti alias
     std_img = cv2.GaussianBlur(std_img, (0, 0), sigmaX=sigma_diff)
-    octave_count = int(math.log2(min(width, height)) - 3)
+    octave_count = int(math.log2(min(width, height)) - 1)
     # 2 extra LoGs because we cant scan top and bottom layers
     img_count_perOctave = s + 3
     print(octave_count)
@@ -309,7 +309,7 @@ def get_descriptors(keypoints: list, magOctaves, sitaOctaves, bin_count=8, windo
         sin = math.sin(math.radians(rot_angle))
         histogram = np.zeros((window_width + 2, window_width + 2, bin_count))
         weighting = -0.5 / ((0.5 * window_width) ** 2)
-        hist_width = scale_mult * 0.5 * keypoint.size
+        hist_width = scale_mult * 0.5 * keypoint.size / (2 ** (octave - 1))
         half_width = int(round(hist_width * math.sqrt(2) * (window_width + 1) / 2.0))
         half_width = int(min(half_width, math.sqrt(height ** 2 + width ** 2)))
 
@@ -318,12 +318,12 @@ def get_descriptors(keypoints: list, magOctaves, sitaOctaves, bin_count=8, windo
                 rot_row = col * sin + row * cos
                 rot_col = col * cos - row * sin
                 # minus 0.5 so we can get middle val
-                row_bin = rot_row + window_width / 2.0 - 0.5
-                col_bin = rot_col + window_width / 2.0 - 0.5
-                row_idx = int(round((keypoint.pt[0] / (2 ** (octave - 1))) + row))
-                col_idx = int(round((keypoint.pt[1] / (2 ** (octave - 1))) + col))
+                row_bin = (rot_row / hist_width) + window_width / 2.0 - 0.5
+                col_bin = (rot_col / hist_width) + window_width / 2.0 - 0.5
+                row_idx = int(round((keypoint.pt[1] / (2 ** (octave - 1))) + row))
+                col_idx = int(round((keypoint.pt[0] / (2 ** (octave - 1))) + col))
                 if row_bin > -1 and row_bin < window_width and col_bin > -1 and col_bin < window_width and\
-                    row_idx > 0 and row_idx < height - 1 and col_idx > 0 and col_idx < width:
+                    row_idx > 0 and row_idx < height - 1 and col_idx > 0 and col_idx < width - 1:
                     bin_pts.append([row_bin, col_bin])
                     weight = math.exp(weighting * ((rot_row / hist_width) ** 2 + (rot_col / hist_width) ** 2))
                     mags.append(magOctaves[octave][keypoint.sigma_idx][row_idx, col_idx] * weight)

@@ -47,15 +47,20 @@ def GetKeyPointAndDescriptor(img_content):
         idv_keypoint.size /= 2.0
 
     descrptrs = SIFT.get_descriptors(idv_keypoints, magOctaves, sitaOctaves)
+    cv_keypoints = [kpnt.to_CV_keypoint() for kpnt in idv_keypoints]
+    
+    # 嘗試利用opencv算出我們的keypoint descriptor
+    #sift = cv2.xfeatures2d.SIFT_create()
+    #kps, descrptrs = sift.compute(img_content['data'], cv_keypoints)
+
     img_content['keypoints'] = idv_keypoints
     img_content['descriptors'] = descrptrs
     #utils.imshow_plt(descrptrs)
-    cv_keypoints = [kpnt.to_CV_keypoint() for kpnt in idv_keypoints]
-
+    
     im_key = cv2.drawKeypoints(img_content['data'], cv_keypoints, np.array([]), (255, 0, 0))
     # im_key = cv2.drawKeypoints(imgs, cv_keypoints, np.array([]), (255, 0, 0))
 
-    utils.imshow_plt(im_key)
+    #utils.imshow_plt(im_key)
 
 def cylindricalWarp(img, f):
     h, w = img.shape[:2]
@@ -101,11 +106,14 @@ if __name__ == '__main__':
                 'descriptors': None,
             })
     # example focals
-    # focals = [705.102, 704.537, 704.847, 704.676, 704.289, 703.895, 704.696, 704.325, 703.794, 
-    # 704.696, 705.327, 705.645, 706.587, 706.645, 705.849, 706.286, 704.916, 705.576]
+    #focals = [705.102, 704.537, 704.847, 704.676, 704.289, 703.895, 704.696, 704.325, 703.794, 
+    #704.696, 705.327, 705.645, 706.587, 706.645, 705.849, 706.286, 704.916, 705.576]
     
-    # our focals
+    # our focals:
+    # 101
     focals = [2600, 2600, 2600, 2600, 2600, 2600, 2600, 2600]
+    # Verticle image
+    # focals = [2400, 2400, 2400, 2400, 2400, 2400, 2400, 2400]
 
     # Map to cylinder
     for i in range(len(img_contents)):
@@ -127,19 +135,26 @@ if __name__ == '__main__':
         keypointPairs = []
 
         # 使用cv2版本的SIFT測試
+        '''
         sift = cv2.xfeatures2d.SIFT_create()
         kps1, dscrts1 = sift.detectAndCompute(leftImg['data'], None)
         kps2, dscrts2 = sift.detectAndCompute(rightImg['data'], None)
 
-        # 我們的SIFT版本
+        im_key = cv2.drawKeypoints(leftImg['data'], kps1, np.array([]), (255, 0, 0))
+        utils.imshow_plt(im_key)
+
+        im_key = cv2.drawKeypoints(rightImg['data'], kps2, np.array([]), (255, 0, 0))
+        utils.imshow_plt(im_key)
         '''
+        # 我們的SIFT版本
+        
         GetKeyPointAndDescriptor(leftImg)
         GetKeyPointAndDescriptor(rightImg)
         kps1 = leftImg['keypoints']
         kps2 = rightImg['keypoints']
         dscrts1 = leftImg['descriptors']
         dscrts2 = rightImg['descriptors']
-        '''
+        
         print("keypoint matching")
 
         # Keypoint match
