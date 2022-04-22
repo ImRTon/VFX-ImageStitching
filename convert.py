@@ -3,6 +3,8 @@ from PIL import Image
 import numpy as np
 import matplotlib.pyplot as plt
 
+# Transform image format
+
 im_pillow = np.array(Image.open('test3/no_drift_result.jpg'))
 #im_bgr = cv2.cvtColor(im_pillow, cv2.COLOR_BGR2RGB)
 

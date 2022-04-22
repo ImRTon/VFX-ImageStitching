@@ -21,7 +21,7 @@ def compute_best_Translate(keypointPairs):
     threshold = 0.5 
     sampleNum = np.shape(keypointPairs)[0]
     maxInlier = 0
-    bestTranslate = None
+    bestTranslate = keypointPairs[0][1] - keypointPairs[0][0]
     print("compute best homography")
     progress = tqdm(total=iteration)
 

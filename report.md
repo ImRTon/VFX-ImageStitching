@@ -1,5 +1,15 @@
 # VFX Project2 Image Stitching
 
+## 成果
+### 象山夜景
+![Imgur](https://imgur.com/DbCKMka.jpg)
+
+### 臺北101
+![Imgur](https://imgur.com/Nust185.jpg)
+
+### 範例
+![Imgur](https://imgur.com/cADdcEh.jpg)
+
 ## 演算法
 整體架構由 `main.py` 作為主要程式執行的區塊，而依據不同功能切割成 `utils.py`、`SIFT.py`、`imageStitching.py` 三個檔案。
 程式執行首先會透過 argparse 取出我們所需要的參數，如圖片資料夾、用於配對Keypoint的Ratio、圖片的焦距等。
@@ -74,8 +84,11 @@ for i in range(rightHeight):
 ### Remove drift
 由於每次的相接都會產生部分的y軸位移，當相接的圖片夠多時，就會造成第一張圖與最後一張圖產生嚴重的Y軸下移。
 
-![](https://imgur.com/67Tjuut.jpg)
+![Imgur](https://imgur.com/67Tjuut.jpg)
 
 因此我們會將這段Y軸位移平均分散給每張圖的每個pixel，透過每個pixel些微的上移，來抵銷整體panorama的向下趨勢。
 
-![](https://imgur.com/aExnNXc.jpg)
+![Imgur](https://imgur.com/aExnNXc.jpg)
+
+## References
+1. https://github.com/UWbadgers16/Panoramas

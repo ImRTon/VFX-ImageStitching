@@ -26,13 +26,10 @@ pip install -r requirements.txt
 
 ## Run
 -i --input_dir INPUT_DIR\
--a --align_img `True` / `False`\
 -p --plot `True` / `False`\
--s --sample_method `uniform` / `random`\
--k --key [0 ~ 1]
+-r --match_ratio [0 ~ 1]\
+-f --focal_length FOCAL_LENGTH
 
 ```
-python main.py -i INPUT_DIR -a ALIGN_IMG_OR_NOT -s SAMPLE_METHOD
+python main.py -i INPUT_DIR -f FOCAL_LENGTH
 ```
-
-## Code
