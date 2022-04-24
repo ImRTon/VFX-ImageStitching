@@ -51,8 +51,8 @@ class KeyPoint():
             hasattr(another, "octave") and\
             hasattr(another, "val") and\
             hasattr(another, "angle") and\
-            self.pt[0] == another.pt[0] and\
-            self.pt[1] == another.pt[1] and\
+            int(self.pt[0]) == int(another.pt[0]) and\
+            int(self.pt[1]) == int(another.pt[1]) and\
             self.sigma_idx == another.sigma_idx and\
             self.size == another.size and\
             self.octave == another.octave and\
@@ -60,7 +60,7 @@ class KeyPoint():
             self.angle == another.angle
 
     def __hash__(self):
-        return hash((self.pt[0], self.pt[1], self.sigma_idx, self.size, self.octave, self.val, self.angle))
+        return hash((int(self.pt[0]), int(self.pt[1]), self.sigma_idx, self.size, self.octave, self.val, self.angle))
 
     def to_CV_keypoint(self):
         cv_keypnt = cv2.KeyPoint(self.pt[0], self.pt[1], self.size)
@@ -146,17 +146,17 @@ def get_parameters(D, row, col, sigma):
         hessianXY: np.array((2, 2))
         gradient: np.array(3)
     """
-    dx = (D[sigma][row + 1, col] - D[sigma][row - 1, col]) / 2.0
-    dy = (D[sigma][row, col + 1] - D[sigma][row, col - 1]) / 2.0
+    dx = (D[sigma][row, col + 1] - D[sigma][row, col - 1]) / 2.0
+    dy = (D[sigma][row + 1, col] - D[sigma][row - 1, col]) / 2.0
     ds = (D[sigma + 1][row, col] - D[sigma - 1][row, col]) / 2.0
 
-    dxx = D[sigma][row + 1, col] - 2 * D[sigma][row, col] + D[sigma][row - 1, col]
-    dyy = D[sigma][row, col + 1] - 2 * D[sigma][row, col] + D[sigma][row, col - 1]
+    dxx = D[sigma][row, col + 1] - 2 * D[sigma][row, col] + D[sigma][row, col - 1]
+    dyy = D[sigma][row + 1, col] - 2 * D[sigma][row, col] + D[sigma][row - 1, col]
     dss = D[sigma + 1][row, col] - 2 * D[sigma][row, col] + D[sigma - 1][row, col]
 
     dxy = (D[sigma][row + 1, col + 1] - D[sigma][row + 1, col - 1] - D[sigma][row - 1, col + 1] + D[sigma][row - 1, col - 1]) / 4.0
-    dxs = (D[sigma + 1][row + 1, col] - D[sigma + 1][row - 1, col] - D[sigma - 1][row + 1, col] + D[sigma - 1][row - 1, col]) / 4.0
-    dys = (D[sigma + 1][row, col + 1] - D[sigma + 1][row, col - 1] - D[sigma - 1][row, col + 1] + D[sigma - 1][row, col - 1]) / 4.0
+    dxs = (D[sigma + 1][row, col + 1] - D[sigma + 1][row, col - 1] - D[sigma - 1][row, col + 1] + D[sigma - 1][row, col - 1]) / 4.0
+    dys = (D[sigma + 1][row + 1, col] - D[sigma + 1][row - 1, col] - D[sigma - 1][row + 1, col] + D[sigma - 1][row - 1, col]) / 4.0
 
     gradient = np.array([dx, dy, ds])
     hessian = np.array([
@@ -223,8 +223,8 @@ def get_gradients(octaves):
         magnitudes = []
         sitas = []
         for img in octave:
-            dx = np.gradient(img, axis=0) * 2
-            dy = np.gradient(img, axis=1) * 2
+            dx = np.gradient(img, axis=1) * 2
+            dy = np.gradient(img, axis=0) * 2
             magnitudes.append(np.sqrt(np.square(dx) + np.square(dy)))
             sitas.append(np.rad2deg(np.arctan2(dy, dx)))
         magOctaves.append(magnitudes)
@@ -238,15 +238,15 @@ def get_orientation(keypoint: KeyPoint, sigma_idx, magOctaves, sitaOctaves, scal
     col, row = int(keypoint.pt[0] / (2 ** keypoint.octave)), int(keypoint.pt[1] / (2 ** keypoint.octave))
     octave_idx = keypoint.octave
     height, width = magOctaves[octave_idx][sigma_idx].shape
-    for x in range(row - radius, row + radius + 1):
-        for y in range(col - radius, col + radius + 1):
+    for x in range(col - radius, col + radius + 1):
+        for y in range(row - radius, row + radius + 1):
             # Check if point inside image
-            if x < 0 or x >= height or y < 0 or y >= width:
+            if x < 0 or x >= width or y < 0 or y >= height:
                 if isDEBUG:
                     print("WARNING: outside boundry")
                 continue
-            histogram[int(sitaOctaves[octave_idx][sigma_idx][x, y] * bin_count / 360.0) % bin_count] += \
-                (math.exp((-0.5 / (scale ** 2)) * ((x - row) ** 2 + (y - col) ** 2)) * magOctaves[octave_idx][sigma_idx][row, col])
+            histogram[int(sitaOctaves[octave_idx][sigma_idx][y, x] * bin_count / 360.0) % bin_count] += \
+                (math.exp((-0.5 / (scale ** 2)) * ((x - col) ** 2 + (y - row) ** 2)) * magOctaves[octave_idx][sigma_idx][row, col])
     # utils.list_plt(histogram)
     top_val, top_idx = 0, 0
     sec_val, sec_idx = 0, 0
@@ -308,8 +308,8 @@ def get_descriptors(keypoints: list, magOctaves, sitaOctaves, bin_count=8, windo
         cos = math.cos(math.radians(rot_angle))
         sin = math.sin(math.radians(rot_angle))
         histogram = np.zeros((window_width + 2, window_width + 2, bin_count))
-        weighting = -0.5 / ((0.5 * window_width) ** 2)
-        hist_width = scale_mult * 0.5 * keypoint.size / (2 ** (octave - 1))
+        weighting = -0.5 / ((0.5 * window_width) ** 2.0)
+        hist_width = scale_mult * 0.5 * keypoint.size
         half_width = int(round(hist_width * math.sqrt(2) * (window_width + 1) / 2.0))
         half_width = int(min(half_width, math.sqrt(height ** 2 + width ** 2)))
 
@@ -318,16 +318,16 @@ def get_descriptors(keypoints: list, magOctaves, sitaOctaves, bin_count=8, windo
                 rot_row = col * sin + row * cos
                 rot_col = col * cos - row * sin
                 # minus 0.5 so we can get middle val
-                row_bin = (rot_row / hist_width) + window_width / 2.0 - 0.5
-                col_bin = (rot_col / hist_width) + window_width / 2.0 - 0.5
-                row_idx = int(round((keypoint.pt[1] / (2 ** (octave - 1))) + row))
-                col_idx = int(round((keypoint.pt[0] / (2 ** (octave - 1))) + col))
+                row_bin = rot_row + window_width / 2.0 - 0.5
+                col_bin = rot_col + window_width / 2.0 - 0.5
+                row_idx = int(round((keypoint.pt[1] / (2.0 ** (octave - 1))) + row))
+                col_idx = int(round((keypoint.pt[0] / (2.0 ** (octave - 1))) + col))
                 if row_bin > -1 and row_bin < window_width and col_bin > -1 and col_bin < window_width and\
-                    row_idx > 0 and row_idx < height - 1 and col_idx > 0 and col_idx < width - 1:
+                    row_idx > 0 and row_idx < height - 1 and col_idx > 0 and col_idx < width:
                     bin_pts.append([row_bin, col_bin])
-                    weight = math.exp(weighting * ((rot_row / hist_width) ** 2 + (rot_col / hist_width) ** 2))
+                    weight = math.exp(weighting * ((rot_row / hist_width) ** 2.0 + (rot_col / hist_width) ** 2.0))
                     mags.append(magOctaves[octave][keypoint.sigma_idx][row_idx, col_idx] * weight)
-                    angles.append((sitaOctaves[octave][keypoint.sigma_idx][row_idx, col_idx] - rot_angle) * (bin_count / 360))
+                    angles.append((sitaOctaves[octave][keypoint.sigma_idx][row_idx, col_idx] - rot_angle) * (bin_count / 360.0))
 
         for bin_pts, mag, angle in zip(bin_pts, mags, angles):
             # Ref: https://medium.com/@russmislam/implementing-sift-in-python-a-complete-guide-part-2-c4350274be2b
