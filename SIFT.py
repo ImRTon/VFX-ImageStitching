@@ -318,12 +318,12 @@ def get_descriptors(keypoints: list, magOctaves, sitaOctaves, bin_count=8, windo
                 rot_row = col * sin + row * cos
                 rot_col = col * cos - row * sin
                 # minus 0.5 so we can get middle val
-                row_bin = rot_row + window_width / 2.0 - 0.5
-                col_bin = rot_col + window_width / 2.0 - 0.5
+                row_bin = rot_row / hist_width + window_width / 2.0 - 0.5
+                col_bin = rot_col / hist_width + window_width / 2.0 - 0.5
                 row_idx = int(round((keypoint.pt[1] / (2.0 ** (octave - 1))) + row))
                 col_idx = int(round((keypoint.pt[0] / (2.0 ** (octave - 1))) + col))
                 if row_bin > -1 and row_bin < window_width and col_bin > -1 and col_bin < window_width and\
-                    row_idx > 0 and row_idx < height - 1 and col_idx > 0 and col_idx < width:
+                    row_idx > 0 and row_idx < height - 1 and col_idx > 0 and col_idx < width - 1:
                     bin_pts.append([row_bin, col_bin])
                     weight = math.exp(weighting * ((rot_row / hist_width) ** 2.0 + (rot_col / hist_width) ** 2.0))
                     mags.append(magOctaves[octave][keypoint.sigma_idx][row_idx, col_idx] * weight)

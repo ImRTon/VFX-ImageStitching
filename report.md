@@ -24,6 +24,87 @@ def get_parser():
     return parser
 ```
 
+## SIFT
+### Deference Of Gaussian
+SIFT 第一步，首先要算出 DoG，也就是對圖片做不同的高斯模糊後，取差值。  
+```python
+DoGOctaves, GaussianOctaves = SIFT.to_gaussian_list(img_content['data'])
+```
+
+算不同 sigma 下的高斯圖片之差值  
+```python
+DoGs.append(gaussian_imgs[j].astype('float32') - gaussian_imgs[j + 1].astype('float32'))
+```
+
+![](./doc/imgs/extremas.jpg)  
+
+由於圖片過於模糊後，降解析度也可達到同樣效果，還可以減少運算時間，因此每隔 2 sigma 後，就會將解析度降一半  
+```python
+std_img = cv2.resize(gaussian_imgs[-3], (width // (2 ** i), height // (2 ** i)))
+```
+
+### Extrema
+算出 DoG 後，要找出 DoGs 中 3×3×3 的最大值與最小值，為了加速運算，這邊用 scipy 與 numpy 去做計算。  
+```python
+maxConv = DoGOctave * (DoGOctave == maximum_filter(DoGOctave,footprint=np.ones((3,3,3))))
+minConv = DoGOctave * (DoGOctave == minimum_filter(DoGOctave,footprint=np.ones((3,3,3))))
+threshold = int(0.5 * contrastThreshold / (OctaveLayersCount + 3) * 255)
+maxConvInds = np.argwhere(maxConv > threshold)
+minConvInds = np.argwhere(minConv < -threshold)
+```
+
+### Scale Space Extrema
+有了 Extrema 後，對這些 Extrema 做內插，去找到真正的極值位置。
+  
+```python
+gradient = np.array([dx, dy, ds])
+hessian = np.array([
+                        [dxx, dxy, dxs],
+                        [dxy, dyy, dys],
+                        [dxs, dys, dss]
+                    ])
+hessianXY = np.array([
+                        [dxx, dxy],
+                        [dxy, dyy]
+                    ])
+extremum = -np.linalg.lstsq(hessian, gradient, rcond=None)[0]
+```
+
+抓到後用 KeyPoint Class 將資訊存下來。
+
+### Orientation
+最終方向部分，分成 36 個 bin，投票選出最多的方向。而如果投票第二高的方向 >= 第一高的票數×80%，則會分裂成兩個 KeyPoint。  
+  
+```python
+histogram[int(sitaOctaves[octave_idx][sigma_idx][y, x] * bin_count / 360.0) % bin_count] += (math.exp((-0.5 / (scale ** 2)) * ((x - col) ** 2 + (y - row) ** 2)) * magOctaves[octave_idx][sigma_idx][row, col])
+```
+
+### Descriptor
+Descriptor 部分，從先前得到的 Keypoint，計算 cos、sin 值，將周圍的特徵旋轉，使各個特徵點的朝向一致。接下來分成  
+
+
+
+### Keypoints
+最終算出這些特徵點。  
+![](./doc/imgs/keypoints.png)  
+以及對應的 Descriptor (個別特徵點為 128 維度)。  
+![](./doc/imgs/descriptors.png)
+
+### Gradients
+為了之後抓到特徵點的方向與力度訊息，因此這邊先對所有圖片使用 Numpy 做預運算，算出 Gradient 與 Magnitude。    
+
+```python
+dx = np.gradient(img, axis=1) * 2
+dy = np.gradient(img, axis=0) * 2
+magnitudes.append(np.sqrt(np.square(dx) + np.square(dy)))
+sitas.append(np.rad2deg(np.arctan2(dy, dx)))
+```   
+
+* Sita
+![](./doc/imgs/orientations.png)
+* Magnitude
+![](./doc/imgs/magnitudes.png)
+
 ### Cylinder Mapping
 為了減少後面warping產生嚴重的影像扭曲，首先會將每張輸入的圖片投影到圓柱的座標系。
 根據以下公式進行轉換:
