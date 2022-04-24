@@ -188,7 +188,7 @@ def findScaleSpaceExtrema(DoGs, row, col, sigma_idx):
     iter_count = 0
     while abs(extremum[0]) > 0.5 or abs(extremum[1]) > 0.5 or abs(extremum[2]) > 0.5:
         # Offset larger than 0.5, its the point nearby
-        row, col, sigma_idx = round(extremum[0]) + row, round(extremum[1]) + col, round(extremum[2]) + sigma_idx
+        row, col, sigma_idx = round(extremum[1]) + row, round(extremum[0]) + col, round(extremum[2]) + sigma_idx
         # Check boundry
         if row < 0 or row >= height or col < 0 or col >= width or sigma_idx < 0 or sigma_idx >= sigma_size:
             break
