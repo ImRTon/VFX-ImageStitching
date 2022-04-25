@@ -13,6 +13,7 @@ import utils
 import SIFT
 import imageStitching
 from scipy import spatial
+import imutils
 
 def GetKeyPointAndDescriptor(img_content):
     DoGOctaves, GaussianOctaves = SIFT.to_gaussian_list(img_content['data'])
@@ -57,7 +58,7 @@ def GetKeyPointAndDescriptor(img_content):
     img_content['descriptors'] = descrptrs
     #utils.imshow_plt(descrptrs)
     
-    im_key = cv2.drawKeypoints(img_content['data'], cv_keypoints, np.array([]), (255, 0, 0))
+    # im_key = cv2.drawKeypoints(img_content['data'], cv_keypoints, np.array([]), (255, 0, 0))
     # im_key = cv2.drawKeypoints(imgs, cv_keypoints, np.array([]), (255, 0, 0))
 
     #utils.imshow_plt(im_key)
@@ -89,7 +90,7 @@ if __name__ == '__main__':
             "filepath": FILEPATH,
             "data": OPENCV_IMG,
             "offset": {"x": int, "y": int}, # 1 means shift left or top, -1 means shift right or down
-            "brightness": INT
+            "exif": dict
         }
     ]
     '''
@@ -99,17 +100,31 @@ if __name__ == '__main__':
         if file_lower.endswith('.jpg') or file_lower.endswith('.png'):
             img_filePath = os.path.join(args.input_dir, file)
             img = utils.imgImportFromPil(img_filePath)
+
+            if not args.degree == 0:
+                (h, w) = img.shape[:2]
+                (cX, cY) = (w // 2, h // 2)
+                # rotate our image by -90 degrees around the image
+                img = imutils.rotate_bound(img, args.degree)
+                img = cv2.resize(img, (w, h))
+                #cv2.imshow("Rotated by %s Degrees" % str(args.degree), img)
+                #cv2.waitKey(0)
+
             img_contents.append({
                 'filepath': img_filePath,
                 'data': img,
                 'keypoints': None,
                 'descriptors': None,
+                'exif': utils.getExifFromPath(img_filePath)
             })
 
     # Map to cylinder
     for i in range(len(img_contents)):
         h, w = img_contents[i]['data'].shape[:2]
-        f = args.focal_length
+        if 'focal_len' in img_contents[i]['exif']:
+            f = img_contents[i]['exif']['focal_len'] * 100
+        else:
+            f = args.focal_length
         result = cylindricalWarp(img_contents[i]['data'], f)
         result = imageStitching.removeBlackBorderLR(result)
         img_contents[i]['data'] = result.copy().astype(np.uint8)
@@ -136,14 +151,16 @@ if __name__ == '__main__':
         
         print("keypoint matching")
 
+        # kd-tree
+        tree = spatial.KDTree(dscrts2)
+
         # Keypoint match
         progress = tqdm(total=len(kps1))
         for j in range(len(kps1)):
             firstKP = kps1[j].pt
             targetDescriptor = dscrts1[j]
             
-            # kd-tree
-            tree = spatial.KDTree(dscrts2)
+            # query from kd-tree
             distance, resultIdx = tree.query(targetDescriptor, 2)
             
             if distance[0] / distance[1] <= args.match_ratio:
@@ -157,8 +174,8 @@ if __name__ == '__main__':
         keypointPairs = np.array(keypointPairs)
         total_img = np.concatenate((leftImg['data'], rightImg['data']), axis=1)
         # Good matches
-        #if args.plot == 'True':
-        utils.plot_matches(keypointPairs, total_img, leftImg['data'].shape[1])
+        if args.plot == 'True':
+            utils.plot_matches(keypointPairs, total_img, leftImg['data'].shape[1])
 
         bestTranslate = imageStitching.compute_best_Translate(keypointPairs)
         offsets.append(bestTranslate)

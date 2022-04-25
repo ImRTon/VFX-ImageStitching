@@ -4,6 +4,7 @@ import numpy as np
 from PIL import Image
 import matplotlib.pyplot as plt
 from tqdm import tqdm
+import exifread
 
 # Focal length: 2600 for Elephant mountain
 #               2400 for Taipei101
@@ -13,8 +14,9 @@ def get_parser():
     parser = argparse.ArgumentParser(description='my description')
     parser.add_argument('-i', '--input_dir', default='test3', type=str, help='Folder of input images.')
     parser.add_argument('-p', '--plot', default='False', type=str, help='Whether to plot result or not.')
-    parser.add_argument('-r', '--match_ratio', default=0.6, type=float, help='Ratio for keypoint matching.')
-    parser.add_argument('-f', '--focal_length', default=2400, type=float, help='focal length of image.')
+    parser.add_argument('-r', '--match_ratio', default=0.8, type=float, help='Ratio for keypoint matching.')
+    parser.add_argument('-f', '--focal_length', default=0, type=float, help='focal length of image.')
+    parser.add_argument('-d', '--degree', default=0, type=float, help='rotation of image.')
     return parser
 
 def imgImportFromPil(img_path: str):
@@ -23,6 +25,22 @@ def imgImportFromPil(img_path: str):
     cv_img = cv2.cvtColor(np.asarray(pil_img), cv2.COLOR_RGB2BGR)
     exif = pil_img.getexif()
     return cv_img
+
+def getExifFromPath(img_path, exif=None):
+    if exif is None:
+        exif = {}
+    with open(img_path, 'rb') as file:
+        tags = exifread.process_file(file, details=False)
+        # for key, val in tags.items():
+        #     print(key, val)
+        if 'EXIF ExposureTime' in tags:
+            exif['exposure_time'] = eval(str(tags['EXIF ExposureTime']))
+        if 'EXIF ISOSpeedRatings' in tags:
+            exif['iso'] = eval(str(tags['EXIF ISOSpeedRatings']))
+        if 'EXIF FocalLength' in tags:
+            exif['focal_len'] = eval(str(tags['EXIF FocalLength']))
+        
+    return exif
 
 def imshow_plt(img, color_bar=False):
     plt.figure(figsize=(10, 8))
