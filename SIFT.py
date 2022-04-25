@@ -330,7 +330,7 @@ def get_descriptors(keypoints: list, magOctaves, sitaOctaves, bin_count=8, windo
                     angles.append((sitaOctaves[octave][keypoint.sigma_idx][row_idx, col_idx] - rot_angle) * (bin_count / 360.0))
 
         for bin_pts, mag, angle in zip(bin_pts, mags, angles):
-            # Ref: https://medium.com/@russmislam/implementing-sift-in-python-a-complete-guide-part-2-c4350274be2b
+            # Ref: OpenCV implementation
             row_bin_floor = math.floor(bin_pts[0])
             col_bin_floor = math.floor(bin_pts[1])
             orient_bin_floor = math.floor(angle)
@@ -373,7 +373,6 @@ def get_descriptors(keypoints: list, magOctaves, sitaOctaves, bin_count=8, windo
         threshold = np.linalg.norm(descriptor_vector) * descrptr_max_val
         descriptor_vector[descriptor_vector > threshold] = threshold
         descriptor_vector /= max(np.linalg.norm(descriptor_vector), 1e-7)
-        # Multiply by 512, round, and saturate between 0 and 255 to convert from float32 to unsigned char (OpenCV convention)
         descriptor_vector = np.round(512 * descriptor_vector)
         descriptor_vector = np.clip(descriptor_vector, 0, 255)
         descriptors.append(descriptor_vector)

@@ -72,24 +72,6 @@ extremum = -np.linalg.lstsq(hessian, gradient, rcond=None)[0]
 
 抓到後用 KeyPoint Class 將資訊存下來。
 
-### Orientation
-最終方向部分，分成 36 個 bin，投票選出最多的方向。而如果投票第二高的方向 >= 第一高的票數×80%，則會分裂成兩個 KeyPoint。  
-  
-```python
-histogram[int(sitaOctaves[octave_idx][sigma_idx][y, x] * bin_count / 360.0) % bin_count] += (math.exp((-0.5 / (scale ** 2)) * ((x - col) ** 2 + (y - row) ** 2)) * magOctaves[octave_idx][sigma_idx][row, col])
-```
-
-### Descriptor
-Descriptor 部分，從先前得到的 Keypoint，計算 cos、sin 值，將周圍的特徵旋轉，使各個特徵點的朝向一致。接下來分成  
-
-
-
-### Keypoints
-最終算出這些特徵點。  
-![](./doc/imgs/keypoints.png)  
-以及對應的 Descriptor (個別特徵點為 128 維度)。  
-![](./doc/imgs/descriptors.png)
-
 ### Gradients
 為了之後抓到特徵點的方向與力度訊息，因此這邊先對所有圖片使用 Numpy 做預運算，算出 Gradient 與 Magnitude。    
 
@@ -104,6 +86,66 @@ sitas.append(np.rad2deg(np.arctan2(dy, dx)))
 ![](./doc/imgs/orientations.png)
 * Magnitude
 ![](./doc/imgs/magnitudes.png)
+
+### Orientation
+最終方向部分，分成 36 個 bin，投票選出最多的方向。而如果投票第二高的方向 >= 第一高的票數×80%，則會分裂成兩個 KeyPoint。  
+  
+```python
+histogram[int(sitaOctaves[octave_idx][sigma_idx][y, x] * bin_count / 360.0) % bin_count] += (math.exp((-0.5 / (scale ** 2)) * ((x - col) ** 2 + (y - row) ** 2)) * magOctaves[octave_idx][sigma_idx][row, col])
+```
+
+### Descriptor
+Descriptor 部分，從先前得到的 Keypoint，計算 cos、sin 值，將周圍的特徵旋轉，使各個特徵點的朝向一致。當中，bin 的數量已經由先前的 36 bins 更改為 8 bins。  
+
+```python
+bin_count = 8
+histogram = np.zeros((window_width + 2, window_width + 2, bin_count))
+```
+
+  
+```python
+rot_row = col * sin + row * cos
+rot_col = col * cos - row * sin
+# minus 0.5 so we can get middle val
+row_bin = rot_row / hist_width + window_width / 2.0 - 0.5
+col_bin = rot_col / hist_width + window_width / 2.0 - 0.5
+row_idx = int(round((keypoint.pt[1] / (2.0 ** (octave - 1))) + row))
+col_idx = int(round((keypoint.pt[0] / (2.0 ** (octave - 1))) + col))
+```
+
+並且取得 Orientation、Magnitude、與對應的 Pixel 位置。
+
+```python
+bin_pts.append([row_bin, col_bin])
+weight = math.exp(weighting * ((rot_row / hist_width) ** 2.0 +(rot_col / hist_width) ** 2.0))
+mags.append(magOctaves[octave][keypoint.sigma_idx][row_idx,col_idx] * weight)
+angles.append((sitaOctaves[octave][keypoint.sigma_idx][row_idx,col_idx] - rot_angle) * (bin_count / 360.0))
+```
+
+在將 Orientation histogram 直接 Flatten 之前，透過 Trilinear interpolation 將 histogram 的 Weighting 分散到各個 bin 中。這部分是參考 OpenCV 的實作。
+> https://gist.github.com/lxc-xx/7088609
+
+![](https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/3D_interpolation2.svg/345px-3D_interpolation2.svg.png)
+
+最終將 histogram 壓平，獲得一個 128 維度的 Descriptor。
+
+
+```python
+ # Discard borders
+descriptor_vector = histogram[1:-1, 1:-1, :].flatten()
+threshold = np.linalg.norm(descriptor_vector) * descrptr_max_val
+descriptor_vector[descriptor_vector > threshold] = threshold
+descriptor_vector /= max(np.linalg.norm(descriptor_vector), 1e-7)
+descriptor_vector = np.round(512 * descriptor_vector)
+descriptor_vector = np.clip(descriptor_vector, 0, 255)
+descriptors.append(descriptor_vector)
+```
+
+### Keypoints
+最終得到這些特徵點。  
+![](./doc/imgs/keypoints.png)  
+以及對應的 Descriptor (個別特徵點為 128 維度)。  
+![](./doc/imgs/descriptors.png)
 
 ### Cylinder Mapping
 為了減少後面warping產生嚴重的影像扭曲，首先會將每張輸入的圖片投影到圓柱的座標系。
