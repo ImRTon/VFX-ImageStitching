@@ -1,0 +1,464 @@
+<!DOCTYPE html><html><head>
+      <title>report</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      <link rel="stylesheet" href="file:///c:\Users\graphics\.vscode\extensions\shd101wyy.markdown-preview-enhanced-0.6.2\node_modules\@shd101wyy\mume\dependencies\katex\katex.min.css">
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      <style>
+      /**
+ * prism.js Github theme based on GitHub's theme.
+ * @author Sam Clarke
+ */
+code[class*="language-"],
+pre[class*="language-"] {
+  color: #333;
+  background: none;
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  text-align: left;
+  white-space: pre;
+  word-spacing: normal;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1.4;
+
+  -moz-tab-size: 8;
+  -o-tab-size: 8;
+  tab-size: 8;
+
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+  padding: .8em;
+  overflow: auto;
+  /* border: 1px solid #ddd; */
+  border-radius: 3px;
+  /* background: #fff; */
+  background: #f5f5f5;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+  padding: .1em;
+  border-radius: .3em;
+  white-space: normal;
+  background: #f5f5f5;
+}
+
+.token.comment,
+.token.blockquote {
+  color: #969896;
+}
+
+.token.cdata {
+  color: #183691;
+}
+
+.token.doctype,
+.token.punctuation,
+.token.variable,
+.token.macro.property {
+  color: #333;
+}
+
+.token.operator,
+.token.important,
+.token.keyword,
+.token.rule,
+.token.builtin {
+  color: #a71d5d;
+}
+
+.token.string,
+.token.url,
+.token.regex,
+.token.attr-value {
+  color: #183691;
+}
+
+.token.property,
+.token.number,
+.token.boolean,
+.token.entity,
+.token.atrule,
+.token.constant,
+.token.symbol,
+.token.command,
+.token.code {
+  color: #0086b3;
+}
+
+.token.tag,
+.token.selector,
+.token.prolog {
+  color: #63a35c;
+}
+
+.token.function,
+.token.namespace,
+.token.pseudo-element,
+.token.class,
+.token.class-name,
+.token.pseudo-class,
+.token.id,
+.token.url-reference .token.variable,
+.token.attr-name {
+  color: #795da3;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+.token.title,
+.token.title .token.punctuation {
+  font-weight: bold;
+  color: #1d3e81;
+}
+
+.token.list {
+  color: #ed6a43;
+}
+
+.token.inserted {
+  background-color: #eaffea;
+  color: #55a532;
+}
+
+.token.deleted {
+  background-color: #ffecec;
+  color: #bd2c00;
+}
+
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+
+/* JSON */
+.language-json .token.property {
+  color: #183691;
+}
+
+.language-markup .token.tag .token.punctuation {
+  color: #333;
+}
+
+/* CSS */
+code.language-css,
+.language-css .token.function {
+  color: #0086b3;
+}
+
+/* YAML */
+.language-yaml .token.atrule {
+  color: #63a35c;
+}
+
+code.language-yaml {
+  color: #183691;
+}
+
+/* Ruby */
+.language-ruby .token.function {
+  color: #333;
+}
+
+/* Markdown */
+.language-markdown .token.url {
+  color: #795da3;
+}
+
+/* Makefile */
+.language-makefile .token.symbol {
+  color: #795da3;
+}
+
+.language-makefile .token.variable {
+  color: #183691;
+}
+
+.language-makefile .token.builtin {
+  color: #0086b3;
+}
+
+/* Bash */
+.language-bash .token.keyword {
+  color: #0086b3;
+}
+
+/* highlight */
+pre[data-line] {
+  position: relative;
+  padding: 1em 0 1em 3em;
+}
+pre[data-line] .line-highlight-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: transparent;
+  display: block;
+  width: 100%;
+}
+
+pre[data-line] .line-highlight {
+  position: absolute;
+  left: 0;
+  right: 0;
+  padding: inherit 0;
+  margin-top: 1em;
+  background: hsla(24, 20%, 50%,.08);
+  background: linear-gradient(to right, hsla(24, 20%, 50%,.1) 70%, hsla(24, 20%, 50%,0));
+  pointer-events: none;
+  line-height: inherit;
+  white-space: pre;
+}
+
+pre[data-line] .line-highlight:before, 
+pre[data-line] .line-highlight[data-end]:after {
+  content: attr(data-start);
+  position: absolute;
+  top: .4em;
+  left: .6em;
+  min-width: 1em;
+  padding: 0 .5em;
+  background-color: hsla(24, 20%, 50%,.4);
+  color: hsl(24, 20%, 95%);
+  font: bold 65%/1.5 sans-serif;
+  text-align: center;
+  vertical-align: .3em;
+  border-radius: 999px;
+  text-shadow: none;
+  box-shadow: 0 1px white;
+}
+
+pre[data-line] .line-highlight[data-end]:after {
+  content: attr(data-end);
+  top: auto;
+  bottom: .4em;
+}html body{font-family:"Helvetica Neue",Helvetica,"Segoe UI",Arial,freesans,sans-serif;font-size:16px;line-height:1.6;color:#333;background-color:#fff;overflow:initial;box-sizing:border-box;word-wrap:break-word}html body>:first-child{margin-top:0}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{line-height:1.2;margin-top:1em;margin-bottom:16px;color:#000}html body h1{font-size:2.25em;font-weight:300;padding-bottom:.3em}html body h2{font-size:1.75em;font-weight:400;padding-bottom:.3em}html body h3{font-size:1.5em;font-weight:500}html body h4{font-size:1.25em;font-weight:600}html body h5{font-size:1.1em;font-weight:600}html body h6{font-size:1em;font-weight:600}html body h1,html body h2,html body h3,html body h4,html body h5{font-weight:600}html body h5{font-size:1em}html body h6{color:#5c5c5c}html body strong{color:#000}html body del{color:#5c5c5c}html body a:not([href]){color:inherit;text-decoration:none}html body a{color:#08c;text-decoration:none}html body a:hover{color:#00a3f5;text-decoration:none}html body img{max-width:100%}html body>p{margin-top:0;margin-bottom:16px;word-wrap:break-word}html body>ul,html body>ol{margin-bottom:16px}html body ul,html body ol{padding-left:2em}html body ul.no-list,html body ol.no-list{padding:0;list-style-type:none}html body ul ul,html body ul ol,html body ol ol,html body ol ul{margin-top:0;margin-bottom:0}html body li{margin-bottom:0}html body li.task-list-item{list-style:none}html body li>p{margin-top:0;margin-bottom:0}html body .task-list-item-checkbox{margin:0 .2em .25em -1.8em;vertical-align:middle}html body .task-list-item-checkbox:hover{cursor:pointer}html body blockquote{margin:16px 0;font-size:inherit;padding:0 15px;color:#5c5c5c;background-color:#f0f0f0;border-left:4px solid #d6d6d6}html body blockquote>:first-child{margin-top:0}html body blockquote>:last-child{margin-bottom:0}html body hr{height:4px;margin:32px 0;background-color:#d6d6d6;border:0 none}html body table{margin:10px 0 15px 0;border-collapse:collapse;border-spacing:0;display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}html body table th{font-weight:bold;color:#000}html body table td,html body table th{border:1px solid #d6d6d6;padding:6px 13px}html body dl{padding:0}html body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:bold}html body dl dd{padding:0 16px;margin-bottom:16px}html body code{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;font-size:.85em !important;color:#000;background-color:#f0f0f0;border-radius:3px;padding:.2em 0}html body code::before,html body code::after{letter-spacing:-0.2em;content:"\00a0"}html body pre>code{padding:0;margin:0;font-size:.85em !important;word-break:normal;white-space:pre;background:transparent;border:0}html body .highlight{margin-bottom:16px}html body .highlight pre,html body pre{padding:1em;overflow:auto;font-size:.85em !important;line-height:1.45;border:#d6d6d6;border-radius:3px}html body .highlight pre{margin-bottom:0;word-break:normal}html body pre code,html body pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}html body pre code:before,html body pre tt:before,html body pre code:after,html body pre tt:after{content:normal}html body p,html body blockquote,html body ul,html body ol,html body dl,html body pre{margin-top:0;margin-bottom:16px}html body kbd{color:#000;border:1px solid #d6d6d6;border-bottom:2px solid #c7c7c7;padding:2px 4px;background-color:#f0f0f0;border-radius:3px}@media print{html body{background-color:#fff}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{color:#000;page-break-after:avoid}html body blockquote{color:#5c5c5c}html body pre{page-break-inside:avoid}html body table{display:table}html body img{display:block;max-width:100%;max-height:100%}html body pre,html body code{word-wrap:break-word;white-space:pre}}.markdown-preview{width:100%;height:100%;box-sizing:border-box}.markdown-preview .pagebreak,.markdown-preview .newpage{page-break-before:always}.markdown-preview pre.line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}.markdown-preview pre.line-numbers>code{position:relative}.markdown-preview pre.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:1em;font-size:100%;left:0;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.markdown-preview pre.line-numbers .line-numbers-rows>span{pointer-events:none;display:block;counter-increment:linenumber}.markdown-preview pre.line-numbers .line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}.markdown-preview .mathjax-exps .MathJax_Display{text-align:center !important}.markdown-preview:not([for="preview"]) .code-chunk .btn-group{display:none}.markdown-preview:not([for="preview"]) .code-chunk .status{display:none}.markdown-preview:not([for="preview"]) .code-chunk .output-div{margin-bottom:16px}.scrollbar-style::-webkit-scrollbar{width:8px}.scrollbar-style::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}.scrollbar-style::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode]){position:relative;width:100%;height:100%;top:0;left:0;margin:0;padding:0;overflow:auto}html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{position:relative;top:0}@media screen and (min-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em calc(50% - 457px + 2em)}}@media screen and (max-width:914px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode]) .markdown-preview{font-size:14px !important;padding:1em}}@media print{html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{display:none}}html body[for="html-export"]:not([data-presentation-mode]) #sidebar-toc-btn{position:fixed;bottom:8px;left:8px;font-size:28px;cursor:pointer;color:inherit;z-index:99;width:32px;text-align:center;opacity:.4}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] #sidebar-toc-btn{opacity:1}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc{position:fixed;top:0;left:0;width:300px;height:100%;padding:32px 0 48px 0;font-size:14px;box-shadow:0 0 4px rgba(150,150,150,0.33);box-sizing:border-box;overflow:auto;background-color:inherit}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar{width:8px}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,0.66);border:4px solid rgba(150,150,150,0.66);background-clip:content-box}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc a{text-decoration:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{padding:0 1.6em;margin-top:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc li{margin-bottom:.8em}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc ul{list-style-type:none}html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{left:300px;width:calc(100% -  300px);padding:2em calc(50% - 457px -  150px);margin:0;box-sizing:border-box}@media screen and (max-width:1274px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for="html-export"]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{width:100%}}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .markdown-preview{left:50%;transform:translateX(-50%)}html body[for="html-export"]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .md-sidebar-toc{display:none}
+/* Please visit the URL below for more information: */
+/*   https://shd101wyy.github.io/markdown-preview-enhanced/#/customize-css */
+
+      </style>
+    </head>
+    <body for="html-export">
+      <div class="mume markdown-preview  ">
+      <h1 class="mume-header" id="vfx-project2-image-stitching">VFX Project2 Image Stitching</h1>
+
+<h2 class="mume-header" id="%E6%88%90%E6%9E%9C">&#x6210;&#x679C;</h2>
+
+<h3 class="mume-header" id="%E8%B1%A1%E5%B1%B1%E5%A4%9C%E6%99%AF">&#x8C61;&#x5C71;&#x591C;&#x666F;</h3>
+
+<p><img src="https://imgur.com/DbCKMka.jpg" alt="Imgur"></p>
+<h3 class="mume-header" id="%E8%87%BA%E5%8C%97101">&#x81FA;&#x5317;101</h3>
+
+<p><img src="https://imgur.com/Nust185.jpg" alt="Imgur"></p>
+<h3 class="mume-header" id="%E7%AF%84%E4%BE%8B">&#x7BC4;&#x4F8B;</h3>
+
+<p><img src="https://imgur.com/cADdcEh.jpg" alt="Imgur"></p>
+<h2 class="mume-header" id="%E6%BC%94%E7%AE%97%E6%B3%95">&#x6F14;&#x7B97;&#x6CD5;</h2>
+
+<p>&#x6574;&#x9AD4;&#x67B6;&#x69CB;&#x7531; <code>main.py</code> &#x4F5C;&#x70BA;&#x4E3B;&#x8981;&#x7A0B;&#x5F0F;&#x57F7;&#x884C;&#x7684;&#x5340;&#x584A;&#xFF0C;&#x800C;&#x4F9D;&#x64DA;&#x4E0D;&#x540C;&#x529F;&#x80FD;&#x5207;&#x5272;&#x6210; <code>utils.py</code>&#x3001;<code>SIFT.py</code>&#x3001;<code>imageStitching.py</code> &#x4E09;&#x500B;&#x6A94;&#x6848;&#x3002;<br>
+&#x7A0B;&#x5F0F;&#x57F7;&#x884C;&#x9996;&#x5148;&#x6703;&#x900F;&#x904E; argparse &#x53D6;&#x51FA;&#x6211;&#x5011;&#x6240;&#x9700;&#x8981;&#x7684;&#x53C3;&#x6578;&#xFF0C;&#x5982;&#x5716;&#x7247;&#x8CC7;&#x6599;&#x593E;&#x3001;&#x7528;&#x65BC;&#x914D;&#x5C0D;Keypoint&#x7684;Ratio&#x3001;&#x5716;&#x7247;&#x7684;&#x7126;&#x8DDD;&#x7B49;&#x3002;</p>
+<pre data-role="codeBlock" data-info="python" class="language-python"><span class="token keyword keyword-def">def</span> <span class="token function">get_parser</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    parser <span class="token operator">=</span> argparse<span class="token punctuation">.</span>ArgumentParser<span class="token punctuation">(</span>description<span class="token operator">=</span><span class="token string">&apos;my description&apos;</span><span class="token punctuation">)</span>
+    parser<span class="token punctuation">.</span>add_argument<span class="token punctuation">(</span><span class="token string">&apos;-i&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;--input_dir&apos;</span><span class="token punctuation">,</span> default<span class="token operator">=</span><span class="token string">&apos;test3&apos;</span><span class="token punctuation">,</span> <span class="token builtin">type</span><span class="token operator">=</span><span class="token builtin">str</span><span class="token punctuation">,</span> <span class="token builtin">help</span><span class="token operator">=</span><span class="token string">&apos;Folder of input images.&apos;</span><span class="token punctuation">)</span>
+    parser<span class="token punctuation">.</span>add_argument<span class="token punctuation">(</span><span class="token string">&apos;-p&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;--plot&apos;</span><span class="token punctuation">,</span> default<span class="token operator">=</span><span class="token string">&apos;False&apos;</span><span class="token punctuation">,</span> <span class="token builtin">type</span><span class="token operator">=</span><span class="token builtin">str</span><span class="token punctuation">,</span> <span class="token builtin">help</span><span class="token operator">=</span><span class="token string">&apos;Whether to plot result or not.&apos;</span><span class="token punctuation">)</span>
+    parser<span class="token punctuation">.</span>add_argument<span class="token punctuation">(</span><span class="token string">&apos;-r&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;--match_ratio&apos;</span><span class="token punctuation">,</span> default<span class="token operator">=</span><span class="token number">0.8</span><span class="token punctuation">,</span> <span class="token builtin">type</span><span class="token operator">=</span><span class="token builtin">float</span><span class="token punctuation">,</span> <span class="token builtin">help</span><span class="token operator">=</span><span class="token string">&apos;Ratio for keypoint matching.&apos;</span><span class="token punctuation">)</span>
+    parser<span class="token punctuation">.</span>add_argument<span class="token punctuation">(</span><span class="token string">&apos;-f&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;--focal_length&apos;</span><span class="token punctuation">,</span> default<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token builtin">type</span><span class="token operator">=</span><span class="token builtin">float</span><span class="token punctuation">,</span> <span class="token builtin">help</span><span class="token operator">=</span><span class="token string">&apos;focal length of image.&apos;</span><span class="token punctuation">)</span>
+    parser<span class="token punctuation">.</span>add_argument<span class="token punctuation">(</span><span class="token string">&apos;-d&apos;</span><span class="token punctuation">,</span> <span class="token string">&apos;--degree&apos;</span><span class="token punctuation">,</span> default<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token builtin">type</span><span class="token operator">=</span><span class="token builtin">float</span><span class="token punctuation">,</span> <span class="token builtin">help</span><span class="token operator">=</span><span class="token string">&apos;rotation of image.&apos;</span><span class="token punctuation">)</span>
+    <span class="token keyword keyword-return">return</span> parser
+</pre><h2 class="mume-header" id="sift">SIFT</h2>
+
+<h3 class="mume-header" id="deference-of-gaussian">Deference Of Gaussian</h3>
+
+<p>SIFT &#x7B2C;&#x4E00;&#x6B65;&#xFF0C;&#x9996;&#x5148;&#x8981;&#x7B97;&#x51FA; DoG&#xFF0C;&#x4E5F;&#x5C31;&#x662F;&#x5C0D;&#x5716;&#x7247;&#x505A;&#x4E0D;&#x540C;&#x7684;&#x9AD8;&#x65AF;&#x6A21;&#x7CCA;&#x5F8C;&#xFF0C;&#x53D6;&#x5DEE;&#x503C;&#x3002;</p>
+<pre data-role="codeBlock" data-info="python" class="language-python">DoGOctaves<span class="token punctuation">,</span> GaussianOctaves <span class="token operator">=</span> SIFT<span class="token punctuation">.</span>to_gaussian_list<span class="token punctuation">(</span>img_content<span class="token punctuation">[</span><span class="token string">&apos;data&apos;</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+</pre><p>&#x7B97;&#x4E0D;&#x540C; sigma &#x4E0B;&#x7684;&#x9AD8;&#x65AF;&#x5716;&#x7247;&#x4E4B;&#x5DEE;&#x503C;</p>
+<pre data-role="codeBlock" data-info="python" class="language-python">DoGs<span class="token punctuation">.</span>append<span class="token punctuation">(</span>gaussian_imgs<span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">.</span>astype<span class="token punctuation">(</span><span class="token string">&apos;float32&apos;</span><span class="token punctuation">)</span> <span class="token operator">-</span> gaussian_imgs<span class="token punctuation">[</span>j <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">.</span>astype<span class="token punctuation">(</span><span class="token string">&apos;float32&apos;</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</pre><p><img src="./doc/imgs/extremas.jpg" alt></p>
+<p>&#x7531;&#x65BC;&#x5716;&#x7247;&#x904E;&#x65BC;&#x6A21;&#x7CCA;&#x5F8C;&#xFF0C;&#x964D;&#x89E3;&#x6790;&#x5EA6;&#x4E5F;&#x53EF;&#x9054;&#x5230;&#x540C;&#x6A23;&#x6548;&#x679C;&#xFF0C;&#x9084;&#x53EF;&#x4EE5;&#x6E1B;&#x5C11;&#x904B;&#x7B97;&#x6642;&#x9593;&#xFF0C;&#x56E0;&#x6B64;&#x6BCF;&#x9694; 2 sigma &#x5F8C;&#xFF0C;&#x5C31;&#x6703;&#x5C07;&#x89E3;&#x6790;&#x5EA6;&#x964D;&#x4E00;&#x534A;</p>
+<pre data-role="codeBlock" data-info="python" class="language-python">std_img <span class="token operator">=</span> cv2<span class="token punctuation">.</span>resize<span class="token punctuation">(</span>gaussian_imgs<span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>width <span class="token operator">//</span> <span class="token punctuation">(</span><span class="token number">2</span> <span class="token operator">**</span> i<span class="token punctuation">)</span><span class="token punctuation">,</span> height <span class="token operator">//</span> <span class="token punctuation">(</span><span class="token number">2</span> <span class="token operator">**</span> i<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</pre><h3 class="mume-header" id="extrema">Extrema</h3>
+
+<p>&#x7B97;&#x51FA; DoG &#x5F8C;&#xFF0C;&#x8981;&#x627E;&#x51FA; DoGs &#x4E2D; 3&#xD7;3&#xD7;3 &#x7684;&#x6700;&#x5927;&#x503C;&#x8207;&#x6700;&#x5C0F;&#x503C;&#xFF0C;&#x70BA;&#x4E86;&#x52A0;&#x901F;&#x904B;&#x7B97;&#xFF0C;&#x9019;&#x908A;&#x7528; scipy &#x8207; numpy &#x53BB;&#x505A;&#x8A08;&#x7B97;&#x3002;</p>
+<pre data-role="codeBlock" data-info="python" class="language-python">maxConv <span class="token operator">=</span> DoGOctave <span class="token operator">*</span> <span class="token punctuation">(</span>DoGOctave <span class="token operator">==</span> maximum_filter<span class="token punctuation">(</span>DoGOctave<span class="token punctuation">,</span>footprint<span class="token operator">=</span>np<span class="token punctuation">.</span>ones<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+minConv <span class="token operator">=</span> DoGOctave <span class="token operator">*</span> <span class="token punctuation">(</span>DoGOctave <span class="token operator">==</span> minimum_filter<span class="token punctuation">(</span>DoGOctave<span class="token punctuation">,</span>footprint<span class="token operator">=</span>np<span class="token punctuation">.</span>ones<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">,</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+threshold <span class="token operator">=</span> <span class="token builtin">int</span><span class="token punctuation">(</span><span class="token number">0.5</span> <span class="token operator">*</span> contrastThreshold <span class="token operator">/</span> <span class="token punctuation">(</span>OctaveLayersCount <span class="token operator">+</span> <span class="token number">3</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">255</span><span class="token punctuation">)</span>
+maxConvInds <span class="token operator">=</span> np<span class="token punctuation">.</span>argwhere<span class="token punctuation">(</span>maxConv <span class="token operator">&gt;</span> threshold<span class="token punctuation">)</span>
+minConvInds <span class="token operator">=</span> np<span class="token punctuation">.</span>argwhere<span class="token punctuation">(</span>minConv <span class="token operator">&lt;</span> <span class="token operator">-</span>threshold<span class="token punctuation">)</span>
+</pre><h3 class="mume-header" id="scale-space-extrema">Scale Space Extrema</h3>
+
+<p>&#x6709;&#x4E86; Extrema &#x5F8C;&#xFF0C;&#x5C0D;&#x9019;&#x4E9B; Extrema &#x505A;&#x5167;&#x63D2;&#xFF0C;&#x53BB;&#x627E;&#x5230;&#x771F;&#x6B63;&#x7684;&#x6975;&#x503C;&#x4F4D;&#x7F6E;&#x3002;</p>
+<pre data-role="codeBlock" data-info="python" class="language-python">gradient <span class="token operator">=</span> np<span class="token punctuation">.</span>array<span class="token punctuation">(</span><span class="token punctuation">[</span>dx<span class="token punctuation">,</span> dy<span class="token punctuation">,</span> ds<span class="token punctuation">]</span><span class="token punctuation">)</span>
+hessian <span class="token operator">=</span> np<span class="token punctuation">.</span>array<span class="token punctuation">(</span><span class="token punctuation">[</span>
+                        <span class="token punctuation">[</span>dxx<span class="token punctuation">,</span> dxy<span class="token punctuation">,</span> dxs<span class="token punctuation">]</span><span class="token punctuation">,</span>
+                        <span class="token punctuation">[</span>dxy<span class="token punctuation">,</span> dyy<span class="token punctuation">,</span> dys<span class="token punctuation">]</span><span class="token punctuation">,</span>
+                        <span class="token punctuation">[</span>dxs<span class="token punctuation">,</span> dys<span class="token punctuation">,</span> dss<span class="token punctuation">]</span>
+                    <span class="token punctuation">]</span><span class="token punctuation">)</span>
+hessianXY <span class="token operator">=</span> np<span class="token punctuation">.</span>array<span class="token punctuation">(</span><span class="token punctuation">[</span>
+                        <span class="token punctuation">[</span>dxx<span class="token punctuation">,</span> dxy<span class="token punctuation">]</span><span class="token punctuation">,</span>
+                        <span class="token punctuation">[</span>dxy<span class="token punctuation">,</span> dyy<span class="token punctuation">]</span>
+                    <span class="token punctuation">]</span><span class="token punctuation">)</span>
+extremum <span class="token operator">=</span> <span class="token operator">-</span>np<span class="token punctuation">.</span>linalg<span class="token punctuation">.</span>lstsq<span class="token punctuation">(</span>hessian<span class="token punctuation">,</span> gradient<span class="token punctuation">,</span> rcond<span class="token operator">=</span><span class="token boolean">None</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
+</pre><p>&#x6293;&#x5230;&#x5F8C;&#x7528; KeyPoint Class &#x5C07;&#x8CC7;&#x8A0A;&#x5B58;&#x4E0B;&#x4F86;&#x3002;</p>
+<h3 class="mume-header" id="gradients">Gradients</h3>
+
+<p>&#x70BA;&#x4E86;&#x4E4B;&#x5F8C;&#x6293;&#x5230;&#x7279;&#x5FB5;&#x9EDE;&#x7684;&#x65B9;&#x5411;&#x8207;&#x529B;&#x5EA6;&#x8A0A;&#x606F;&#xFF0C;&#x56E0;&#x6B64;&#x9019;&#x908A;&#x5148;&#x5C0D;&#x6240;&#x6709;&#x5716;&#x7247;&#x4F7F;&#x7528; Numpy &#x505A;&#x9810;&#x904B;&#x7B97;&#xFF0C;&#x7B97;&#x51FA; Gradient &#x8207; Magnitude&#x3002;</p>
+<pre data-role="codeBlock" data-info="python" class="language-python">dx <span class="token operator">=</span> np<span class="token punctuation">.</span>gradient<span class="token punctuation">(</span>img<span class="token punctuation">,</span> axis<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">2</span>
+dy <span class="token operator">=</span> np<span class="token punctuation">.</span>gradient<span class="token punctuation">(</span>img<span class="token punctuation">,</span> axis<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">2</span>
+magnitudes<span class="token punctuation">.</span>append<span class="token punctuation">(</span>np<span class="token punctuation">.</span>sqrt<span class="token punctuation">(</span>np<span class="token punctuation">.</span>square<span class="token punctuation">(</span>dx<span class="token punctuation">)</span> <span class="token operator">+</span> np<span class="token punctuation">.</span>square<span class="token punctuation">(</span>dy<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+sitas<span class="token punctuation">.</span>append<span class="token punctuation">(</span>np<span class="token punctuation">.</span>rad2deg<span class="token punctuation">(</span>np<span class="token punctuation">.</span>arctan2<span class="token punctuation">(</span>dy<span class="token punctuation">,</span> dx<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</pre><ul>
+<li>Sita<br>
+<img src="./doc/imgs/orientations.png" alt></li>
+<li>Magnitude<br>
+<img src="./doc/imgs/magnitudes.png" alt></li>
+</ul>
+<h3 class="mume-header" id="orientation">Orientation</h3>
+
+<p>&#x6700;&#x7D42;&#x65B9;&#x5411;&#x90E8;&#x5206;&#xFF0C;&#x5206;&#x6210; 36 &#x500B; bin&#xFF0C;&#x6295;&#x7968;&#x9078;&#x51FA;&#x6700;&#x591A;&#x7684;&#x65B9;&#x5411;&#x3002;&#x800C;&#x5982;&#x679C;&#x6295;&#x7968;&#x7B2C;&#x4E8C;&#x9AD8;&#x7684;&#x65B9;&#x5411; &gt;= &#x7B2C;&#x4E00;&#x9AD8;&#x7684;&#x7968;&#x6578;&#xD7;80%&#xFF0C;&#x5247;&#x6703;&#x5206;&#x88C2;&#x6210;&#x5169;&#x500B; KeyPoint&#x3002;</p>
+<pre data-role="codeBlock" data-info="python" class="language-python">histogram<span class="token punctuation">[</span><span class="token builtin">int</span><span class="token punctuation">(</span>sitaOctaves<span class="token punctuation">[</span>octave_idx<span class="token punctuation">]</span><span class="token punctuation">[</span>sigma_idx<span class="token punctuation">]</span><span class="token punctuation">[</span>y<span class="token punctuation">,</span> x<span class="token punctuation">]</span> <span class="token operator">*</span> bin_count <span class="token operator">/</span> <span class="token number">360.0</span><span class="token punctuation">)</span> <span class="token operator">%</span> bin_count<span class="token punctuation">]</span> <span class="token operator">+=</span> <span class="token punctuation">(</span>math<span class="token punctuation">.</span>exp<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token operator">-</span><span class="token number">0.5</span> <span class="token operator">/</span> <span class="token punctuation">(</span>scale <span class="token operator">**</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>x <span class="token operator">-</span> col<span class="token punctuation">)</span> <span class="token operator">**</span> <span class="token number">2</span> <span class="token operator">+</span> <span class="token punctuation">(</span>y <span class="token operator">-</span> row<span class="token punctuation">)</span> <span class="token operator">**</span> <span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">*</span> magOctaves<span class="token punctuation">[</span>octave_idx<span class="token punctuation">]</span><span class="token punctuation">[</span>sigma_idx<span class="token punctuation">]</span><span class="token punctuation">[</span>row<span class="token punctuation">,</span> col<span class="token punctuation">]</span><span class="token punctuation">)</span>
+</pre><h3 class="mume-header" id="descriptor">Descriptor</h3>
+
+<p>Descriptor &#x90E8;&#x5206;&#xFF0C;&#x5F9E;&#x5148;&#x524D;&#x5F97;&#x5230;&#x7684; Keypoint&#xFF0C;&#x8A08;&#x7B97; cos&#x3001;sin &#x503C;&#xFF0C;&#x5C07;&#x5468;&#x570D;&#x7684;&#x7279;&#x5FB5;&#x65CB;&#x8F49;&#xFF0C;&#x4F7F;&#x5404;&#x500B;&#x7279;&#x5FB5;&#x9EDE;&#x7684;&#x671D;&#x5411;&#x4E00;&#x81F4;&#x3002;&#x7576;&#x4E2D;&#xFF0C;bin &#x7684;&#x6578;&#x91CF;&#x5DF2;&#x7D93;&#x7531;&#x5148;&#x524D;&#x7684; 36 bins &#x66F4;&#x6539;&#x70BA; 8 bins&#x3002;</p>
+<pre data-role="codeBlock" data-info="python" class="language-python">bin_count <span class="token operator">=</span> <span class="token number">8</span>
+histogram <span class="token operator">=</span> np<span class="token punctuation">.</span>zeros<span class="token punctuation">(</span><span class="token punctuation">(</span>window_width <span class="token operator">+</span> <span class="token number">2</span><span class="token punctuation">,</span> window_width <span class="token operator">+</span> <span class="token number">2</span><span class="token punctuation">,</span> bin_count<span class="token punctuation">)</span><span class="token punctuation">)</span>
+</pre><pre data-role="codeBlock" data-info="python" class="language-python">rot_row <span class="token operator">=</span> col <span class="token operator">*</span> sin <span class="token operator">+</span> row <span class="token operator">*</span> cos
+rot_col <span class="token operator">=</span> col <span class="token operator">*</span> cos <span class="token operator">-</span> row <span class="token operator">*</span> sin
+<span class="token comment"># minus 0.5 so we can get middle val</span>
+row_bin <span class="token operator">=</span> rot_row <span class="token operator">/</span> hist_width <span class="token operator">+</span> window_width <span class="token operator">/</span> <span class="token number">2.0</span> <span class="token operator">-</span> <span class="token number">0.5</span>
+col_bin <span class="token operator">=</span> rot_col <span class="token operator">/</span> hist_width <span class="token operator">+</span> window_width <span class="token operator">/</span> <span class="token number">2.0</span> <span class="token operator">-</span> <span class="token number">0.5</span>
+row_idx <span class="token operator">=</span> <span class="token builtin">int</span><span class="token punctuation">(</span><span class="token builtin">round</span><span class="token punctuation">(</span><span class="token punctuation">(</span>keypoint<span class="token punctuation">.</span>pt<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">/</span> <span class="token punctuation">(</span><span class="token number">2.0</span> <span class="token operator">**</span> <span class="token punctuation">(</span>octave <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span> row<span class="token punctuation">)</span><span class="token punctuation">)</span>
+col_idx <span class="token operator">=</span> <span class="token builtin">int</span><span class="token punctuation">(</span><span class="token builtin">round</span><span class="token punctuation">(</span><span class="token punctuation">(</span>keypoint<span class="token punctuation">.</span>pt<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">/</span> <span class="token punctuation">(</span><span class="token number">2.0</span> <span class="token operator">**</span> <span class="token punctuation">(</span>octave <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">+</span> col<span class="token punctuation">)</span><span class="token punctuation">)</span>
+</pre><p>&#x4E26;&#x4E14;&#x53D6;&#x5F97; Orientation&#x3001;Magnitude&#x3001;&#x8207;&#x5C0D;&#x61C9;&#x7684; Pixel &#x4F4D;&#x7F6E;&#x3002;</p>
+<pre data-role="codeBlock" data-info="python" class="language-python">bin_pts<span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token punctuation">[</span>row_bin<span class="token punctuation">,</span> col_bin<span class="token punctuation">]</span><span class="token punctuation">)</span>
+weight <span class="token operator">=</span> math<span class="token punctuation">.</span>exp<span class="token punctuation">(</span>weighting <span class="token operator">*</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>rot_row <span class="token operator">/</span> hist_width<span class="token punctuation">)</span> <span class="token operator">**</span> <span class="token number">2.0</span> <span class="token operator">+</span><span class="token punctuation">(</span>rot_col <span class="token operator">/</span> hist_width<span class="token punctuation">)</span> <span class="token operator">**</span> <span class="token number">2.0</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+mags<span class="token punctuation">.</span>append<span class="token punctuation">(</span>magOctaves<span class="token punctuation">[</span>octave<span class="token punctuation">]</span><span class="token punctuation">[</span>keypoint<span class="token punctuation">.</span>sigma_idx<span class="token punctuation">]</span><span class="token punctuation">[</span>row_idx<span class="token punctuation">,</span>col_idx<span class="token punctuation">]</span> <span class="token operator">*</span> weight<span class="token punctuation">)</span>
+angles<span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token punctuation">(</span>sitaOctaves<span class="token punctuation">[</span>octave<span class="token punctuation">]</span><span class="token punctuation">[</span>keypoint<span class="token punctuation">.</span>sigma_idx<span class="token punctuation">]</span><span class="token punctuation">[</span>row_idx<span class="token punctuation">,</span>col_idx<span class="token punctuation">]</span> <span class="token operator">-</span> rot_angle<span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token punctuation">(</span>bin_count <span class="token operator">/</span> <span class="token number">360.0</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</pre><p>&#x5728;&#x5C07; Orientation histogram &#x76F4;&#x63A5; Flatten &#x4E4B;&#x524D;&#xFF0C;&#x900F;&#x904E; Trilinear interpolation &#x5C07; histogram &#x7684; Weighting &#x5206;&#x6563;&#x5230;&#x5404;&#x500B; bin &#x4E2D;&#x3002;&#x9019;&#x90E8;&#x5206;&#x662F;&#x53C3;&#x8003; OpenCV &#x7684;&#x5BE6;&#x4F5C;&#x3002;</p>
+<blockquote>
+<p><a href="https://gist.github.com/lxc-xx/7088609">https://gist.github.com/lxc-xx/7088609</a></p>
+</blockquote>
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/3D_interpolation2.svg/345px-3D_interpolation2.svg.png" alt></p>
+<p>&#x6700;&#x7D42;&#x5C07; histogram &#x58D3;&#x5E73;&#xFF0C;&#x7372;&#x5F97;&#x4E00;&#x500B; 128 &#x7DAD;&#x5EA6;&#x7684; Descriptor&#x3002;</p>
+<pre data-role="codeBlock" data-info="python" class="language-python"> <span class="token comment"># Discard borders</span>
+descriptor_vector <span class="token operator">=</span> histogram<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">:</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">:</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token punctuation">:</span><span class="token punctuation">]</span><span class="token punctuation">.</span>flatten<span class="token punctuation">(</span><span class="token punctuation">)</span>
+threshold <span class="token operator">=</span> np<span class="token punctuation">.</span>linalg<span class="token punctuation">.</span>norm<span class="token punctuation">(</span>descriptor_vector<span class="token punctuation">)</span> <span class="token operator">*</span> descrptr_max_val
+descriptor_vector<span class="token punctuation">[</span>descriptor_vector <span class="token operator">&gt;</span> threshold<span class="token punctuation">]</span> <span class="token operator">=</span> threshold
+descriptor_vector <span class="token operator">/=</span> <span class="token builtin">max</span><span class="token punctuation">(</span>np<span class="token punctuation">.</span>linalg<span class="token punctuation">.</span>norm<span class="token punctuation">(</span>descriptor_vector<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">1e-7</span><span class="token punctuation">)</span>
+descriptor_vector <span class="token operator">=</span> np<span class="token punctuation">.</span><span class="token builtin">round</span><span class="token punctuation">(</span><span class="token number">512</span> <span class="token operator">*</span> descriptor_vector<span class="token punctuation">)</span>
+descriptor_vector <span class="token operator">=</span> np<span class="token punctuation">.</span>clip<span class="token punctuation">(</span>descriptor_vector<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">255</span><span class="token punctuation">)</span>
+descriptors<span class="token punctuation">.</span>append<span class="token punctuation">(</span>descriptor_vector<span class="token punctuation">)</span>
+</pre><h3 class="mume-header" id="keypoints">Keypoints</h3>
+
+<p>&#x6700;&#x7D42;&#x5F97;&#x5230;&#x9019;&#x4E9B;&#x7279;&#x5FB5;&#x9EDE;&#x3002;<br>
+<img src="./doc/imgs/keypoints.png" alt><br>
+&#x4EE5;&#x53CA;&#x5C0D;&#x61C9;&#x7684; Descriptor (&#x500B;&#x5225;&#x7279;&#x5FB5;&#x9EDE;&#x70BA; 128 &#x7DAD;&#x5EA6;)&#x3002;<br>
+<img src="./doc/imgs/descriptors.png" alt></p>
+<h3 class="mume-header" id="cylinder-mapping">Cylinder Mapping</h3>
+
+<p>&#x70BA;&#x4E86;&#x6E1B;&#x5C11;&#x5F8C;&#x9762;warping&#x7522;&#x751F;&#x56B4;&#x91CD;&#x7684;&#x5F71;&#x50CF;&#x626D;&#x66F2;&#xFF0C;&#x9996;&#x5148;&#x6703;&#x5C07;&#x6BCF;&#x5F35;&#x8F38;&#x5165;&#x7684;&#x5716;&#x7247;&#x6295;&#x5F71;&#x5230;&#x5713;&#x67F1;&#x7684;&#x5EA7;&#x6A19;&#x7CFB;&#x3002;<br>
+&#x6839;&#x64DA;&#x4EE5;&#x4E0B;&#x516C;&#x5F0F;&#x9032;&#x884C;&#x8F49;&#x63DB;:</p>
+<p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>x</mi><mo mathvariant="normal" lspace="0em" rspace="0em">&#x2032;</mo></msup><mo>=</mo><mi>s</mi><mo>&#x2217;</mo><mi>&#x3B8;</mi><mo>=</mo><mi>s</mi><mo>&#x2217;</mo><mi>arctan</mi><mo>&#x2061;</mo><mfrac><mi>x</mi><mi>f</mi></mfrac></mrow><annotation encoding="application/x-tex">x&apos; = s * \theta = s * \arctan{\frac{x}{f}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7519em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">&#x2032;</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4653em;"></span><span class="mord mathnormal">s</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">&#x2217;</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">&#x3B8;</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4653em;"></span><span class="mord mathnormal">s</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">&#x2217;</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.1765em;vertical-align:-0.4811em;"></span><span class="mop">arctan</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6954em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.10764em;">f</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">x</span></span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.4811em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></p>
+<p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>y</mi><mo mathvariant="normal" lspace="0em" rspace="0em">&#x2032;</mo></msup><mo>=</mo><mi>s</mi><mo>&#x2217;</mo><mi>h</mi><mo>=</mo><mi>s</mi><mo>&#x2217;</mo><mfrac><mi>y</mi><msqrt><mrow><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><msup><mi>f</mi><mn>2</mn></msup></mrow></msqrt></mfrac></mrow><annotation encoding="application/x-tex">y&apos; = s * h = s * \frac{y}{\sqrt{x^2 + f^2}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9463em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7519em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">&#x2032;</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4653em;"></span><span class="mord mathnormal">s</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">&#x2217;</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">h</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4653em;"></span><span class="mord mathnormal">s</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">&#x2217;</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.5771em;vertical-align:-0.8296em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7475em;"><span style="top:-2.446em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord sqrt mtight"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.0628em;"><span class="svg-align" style="top:-3.4286em;"><span class="pstrut" style="height:3.4286em;"></span><span class="mord mtight" style="padding-left:1.19em;"><span class="mord mtight"><span class="mord mathnormal mtight">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7463em;"><span style="top:-2.786em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mbin mtight">+</span><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7463em;"><span style="top:-2.786em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span><span style="top:-3.0348em;"><span class="pstrut" style="height:3.4286em;"></span><span class="hide-tail mtight" style="min-width:0.853em;height:1.5429em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.5429em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.3937em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.4461em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03588em;">y</span></span></span></span></span><span class="vlist-s">&#x200B;</span></span><span class="vlist-r"><span class="vlist" style="height:0.8296em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></p>
+<p>&#x5176;&#x4E2D;f&#x662F;&#x5716;&#x7247;&#x7684;&#x7126;&#x8DDD;&#x3002;</p>
+<h3 class="mume-header" id="keypoint-matching">Keypoint matching</h3>
+
+<p>&#x900F;&#x904E;&#x524D;&#x9762;&#x7684;SIFT&#x7B97;&#x51FA;&#x4E86;&#x6BCF;&#x5F35;&#x5716;&#x7684;&#x95DC;&#x9375;&#x9EDE;&#x5EA7;&#x6A19;&#x4EE5;&#x53CA;&#x76F8;&#x5C0D;&#x61C9;&#x7684;128&#x7DAD;&#x7684;Feature Descriptor&#x5411;&#x91CF;&#x5F8C;&#x3002;<br>
+&#x9019;&#x908A;&#x5229;&#x7528;&#x66B4;&#x529B;&#x6CD5;&#x53BB;&#x8A08;&#x7B97;&#x5169;&#x5F35;&#x5716;&#x4E4B;&#x9593;&#x5C0D;&#x61C9;&#x7684;Keypoint&#xFF0C;&#x6211;&#x5011;&#x9996;&#x5148;&#x5C07;&#x5716;2&#x7684;&#x6240;&#x6709;Descriptor&#x5411;&#x91CF;&#x5132;&#x5B58;&#x5728;KD-Tree&#x7576;&#x4E2D;&#x3002;&#x63A5;&#x8457;&#x6211;&#x5011;Query&#x51FA;&#x76EE;&#x524D;&#x6AA2;&#x67E5;&#x7684;&#x9019;&#x500B;&#x5716;1&#x7684;keypoint&#x5728;kd-tree&#x4E2D;&#x8DDD;&#x96E2;&#x6700;&#x77ED;&#x8207;&#x7B2C;&#x4E8C;&#x77ED;&#x7684;keypoint&#xFF0C;&#x4E26;&#x4E14;&#x8A08;&#x7B97;&#x5176;Ratio&#xFF0C;&#x82E5;&#x4F4E;&#x65BC;&#x4E00;&#x5B9A;&#x503C;&#xFF0C;&#x6211;&#x5011;&#x5C31;&#x6703;&#x5C07;&#x6700;&#x77ED;&#x8DDD;&#x96E2;&#x7684;Pair&#x8996;&#x70BA;&#x5408;&#x6CD5;&#x7684;Keypoint pair&#x3002;</p>
+<pre data-role="codeBlock" data-info="python" class="language-python"><span class="token keyword keyword-for">for</span> j <span class="token keyword keyword-in">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>kps1<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    firstKP <span class="token operator">=</span> kps1<span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">.</span>pt
+    targetDescriptor <span class="token operator">=</span> dscrts1<span class="token punctuation">[</span>j<span class="token punctuation">]</span>
+    
+    <span class="token comment"># kd-tree</span>
+    tree <span class="token operator">=</span> spatial<span class="token punctuation">.</span>KDTree<span class="token punctuation">(</span>dscrts2<span class="token punctuation">)</span>
+    distance<span class="token punctuation">,</span> resultIdx <span class="token operator">=</span> tree<span class="token punctuation">.</span>query<span class="token punctuation">(</span>targetDescriptor<span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span>
+    
+    <span class="token keyword keyword-if">if</span> distance<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">/</span> distance<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">&lt;=</span> args<span class="token punctuation">.</span>match_ratio<span class="token punctuation">:</span>
+        secondKP <span class="token operator">=</span> kps2<span class="token punctuation">[</span>resultIdx<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">.</span>pt
+        keypointPairs<span class="token punctuation">.</span>append<span class="token punctuation">(</span><span class="token punctuation">[</span>firstKP<span class="token punctuation">,</span> secondKP<span class="token punctuation">]</span><span class="token punctuation">)</span>
+</pre><h3 class="mume-header" id="find-best-translate">Find best translate</h3>
+
+<p>&#x63A5;&#x9019;&#x5229;&#x7528;&#x9019;&#x4E9B;&#x914D;&#x5C0D;&#x597D;&#x7684;Keypoint pairs&#xFF0C;&#x900F;&#x904E;RANSAC&#x6F14;&#x7B97;&#x6CD5;&#x627E;&#x51FA;&#x6700;&#x4F73;&#x7684;&#x4F4D;&#x79FB;&#x5411;&#x91CF;&#x3002;</p>
+<p>RANSAC&#x6F14;&#x7B97;&#x6CD5;:</p>
+<ol>
+<li>
+<p>&#x6BCF;&#x6B21;&#x53D6;&#x51FA;&#x4E00;&#x7D44;keypoint pair&#xFF0C;&#x8A08;&#x7B97;&#x5169;&#x500B;&#x9EDE;&#x4E4B;&#x9593;&#x7684;&#x4F4D;&#x79FB;</p>
+</li>
+<li>
+<p>&#x63A5;&#x8457;&#x5229;&#x7528;&#x9019;&#x500B;&#x4F4D;&#x79FB;&#x53BB;&#x8A08;&#x7B97;&#x5176;&#x4ED6;pair&#x7684;inlier&#xFF0C;&#x7576;&#x4E00;&#x500B;pair&#x5167;&#x7684;&#x5176;&#x4E2D;&#x4E00;&#x500B;&#x9EDE;&#x7D93;&#x904E;&#x4F4D;&#x79FB;&#x4E4B;&#x5F8C;&#xFF0C;&#x8207;&#x53E6;&#x4E00;&#x500B;&#x9EDE;&#x7684;&#x8DDD;&#x96E2;&#x5728;&#x67D0;&#x500B;&#x95BE;&#x503C;&#x5167;(&#x6211;&#x5011;&#x8A2D;0.5)&#xFF0C;&#x5C31;&#x6703;&#x8996;&#x70BA;inlier&#x3002;</p>
+</li>
+<li>
+<p>&#x7D93;&#x904E;&#x591A;&#x6B21;&#x8FED;&#x4EE3;&#x5F8C;(&#x6211;&#x5011;&#x8A2D;3000&#x6B21;)&#xFF0C;&#x6700;&#x5F8C;&#x53D6;&#x51FA;inlier&#x6700;&#x591A;&#x7684;&#x4F4D;&#x79FB;&#x91CF;&#x4F5C;&#x70BA;&#x6700;&#x4F73;&#x7684;&#x4F4D;&#x79FB;&#x5411;&#x91CF;&#x3002;</p>
+</li>
+</ol>
+<h3 class="mume-header" id="stitching">Stitching</h3>
+
+<p>&#x5C07;&#x53F3;&#x908A;&#x7684;&#x5716;&#x7247;&#x5229;&#x7528;&#x524D;&#x500B;&#x6B65;&#x9A5F;&#x8A08;&#x7B97;&#x7684;&#x6700;&#x4F73;&#x4F4D;&#x79FB;&#x5411;&#x91CF;&#xFF0C;&#x9032;&#x884C;&#x4F4D;&#x79FB;&#x4E4B;&#x5F8C;&#xFF0C;&#x8207;&#x5DE6;&#x5074;&#x5716;&#x7247;&#x5408;&#x4F75;</p>
+<h3 class="mume-header" id="blending">blending</h3>
+
+<p>&#x91DD;&#x5C0D;&#x5DE6;&#x53F3;&#x5716;&#x7247;&#x91CD;&#x758A;&#x7684;&#x90E8;&#x5206;&#xFF0C;&#x900F;&#x904E;&#x7DDA;&#x6027;&#x7684;Alpha blending&#xFF0C;&#x907F;&#x514D;&#x51FA;&#x73FE;&#x660E;&#x986F;&#x7684;&#x63A5;&#x5408;&#x908A;&#x754C;&#x3002;</p>
+<p>&#x4E5F;&#x5C31;&#x662F;&#x9010;&#x884C;&#x6AA2;&#x67E5;&#x6BCF;&#x500B;row&#xFF0C;&#x91DD;&#x5C0D;&#x91CD;&#x758A;&#x7684;&#x90E8;&#x5206;&#xFF0C;&#x8D8A;&#x5DE6;&#x908A;&#x7684;pxiel&#xFF0C;&#x6703;&#x50BE;&#x5411;&#x65BC;&#x5DE6;&#x5716;&#x7684;&#x984F;&#x8272;&#xFF0C;&#x8D8A;&#x5F80;&#x53F3;&#x8D8A;&#x50BE;&#x5411;&#x65BC;&#x53F3;&#x908A;&#x7684;&#x984F;&#x8272;&#x3002;</p>
+<pre data-role="codeBlock" data-info="python" class="language-python"><span class="token keyword keyword-for">for</span> i <span class="token keyword keyword-in">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>rightHeight<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword keyword-for">for</span> j <span class="token keyword keyword-in">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>rightWidth<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword keyword-if">if</span> <span class="token punctuation">(</span>overlap_mask<span class="token punctuation">[</span>i<span class="token punctuation">,</span> j<span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+            blendedImage<span class="token punctuation">[</span>i<span class="token punctuation">,</span> j<span class="token punctuation">]</span> <span class="token operator">=</span> alpha_mask<span class="token punctuation">[</span>i<span class="token punctuation">,</span> j<span class="token punctuation">]</span> <span class="token operator">*</span> leftImg<span class="token punctuation">[</span>i<span class="token punctuation">,</span> j<span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token punctuation">(</span><span class="token number">1</span> <span class="token operator">-</span> alpha_mask<span class="token punctuation">[</span>i<span class="token punctuation">,</span> j<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">*</span> rightImg<span class="token punctuation">[</span>i<span class="token punctuation">,</span> j<span class="token punctuation">]</span>
+</pre><h3 class="mume-header" id="remove-black-board">Remove black board</h3>
+
+<p>&#x5716;&#x7247;&#x76F8;&#x63A5;&#x4E4B;&#x5F8C;&#xFF0C;&#x5468;&#x570D;&#x6703;&#x7522;&#x751F;&#x9ED1;&#x8272;&#x908A;&#x6846;&#x3002;&#x5728;&#x9019;&#x500B;&#x6B65;&#x9A5F;&#x6211;&#x5011;&#x6703;&#x7531;&#x5DE6;&#x800C;&#x53F3;&#xFF0C;&#x518D;&#x7531;&#x53F3;&#x800C;&#x5DE6;&#x6AA2;&#x67E5;&#x6BCF;&#x500B;column&#xFF0C;&#x5982;&#x679C;&#x8A72;column&#x7684;&#x6240;&#x6709;pixel&#x90FD;&#x662F;&#x9ED1;&#x7684;&#x8A71;&#x5C31;&#x6703;&#x79FB;&#x9664;&#x8A72;column&#x3002;</p>
+<h3 class="mume-header" id="remove-drift">Remove drift</h3>
+
+<p>&#x7531;&#x65BC;&#x6BCF;&#x6B21;&#x7684;&#x76F8;&#x63A5;&#x90FD;&#x6703;&#x7522;&#x751F;&#x90E8;&#x5206;&#x7684;y&#x8EF8;&#x4F4D;&#x79FB;&#xFF0C;&#x7576;&#x76F8;&#x63A5;&#x7684;&#x5716;&#x7247;&#x5920;&#x591A;&#x6642;&#xFF0C;&#x5C31;&#x6703;&#x9020;&#x6210;&#x7B2C;&#x4E00;&#x5F35;&#x5716;&#x8207;&#x6700;&#x5F8C;&#x4E00;&#x5F35;&#x5716;&#x7522;&#x751F;&#x56B4;&#x91CD;&#x7684;Y&#x8EF8;&#x4E0B;&#x79FB;&#x3002;</p>
+<p><img src="https://imgur.com/67Tjuut.jpg" alt="Imgur"></p>
+<p>&#x56E0;&#x6B64;&#x6211;&#x5011;&#x6703;&#x5C07;&#x9019;&#x6BB5;Y&#x8EF8;&#x4F4D;&#x79FB;&#x5E73;&#x5747;&#x5206;&#x6563;&#x7D66;&#x6BCF;&#x5F35;&#x5716;&#x7684;&#x6BCF;&#x500B;pixel&#xFF0C;&#x900F;&#x904E;&#x6BCF;&#x500B;pixel&#x4E9B;&#x5FAE;&#x7684;&#x4E0A;&#x79FB;&#xFF0C;&#x4F86;&#x62B5;&#x92B7;&#x6574;&#x9AD4;panorama&#x7684;&#x5411;&#x4E0B;&#x8DA8;&#x52E2;&#x3002;</p>
+<p><img src="https://imgur.com/aExnNXc.jpg" alt="Imgur"></p>
+<h2 class="mume-header" id="references">References</h2>
+
+<ol>
+<li><a href="https://github.com/UWbadgers16/Panoramas">https://github.com/UWbadgers16/Panoramas</a></li>
+<li><a href="https://gist.github.com/lxc-xx/7088609">https://gist.github.com/lxc-xx/7088609</a></li>
+</ol>
+
+      </div>
+      
+      
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    </body></html>
