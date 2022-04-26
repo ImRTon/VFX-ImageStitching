@@ -17,10 +17,11 @@
 ```python
 def get_parser():
     parser = argparse.ArgumentParser(description='my description')
-    parser.add_argument('-i', '--input_dir', default='test2', type=str, help='Folder of input images.')
+    parser.add_argument('-i', '--input_dir', default='test3', type=str, help='Folder of input images.')
     parser.add_argument('-p', '--plot', default='False', type=str, help='Whether to plot result or not.')
-    parser.add_argument('-r', '--match_ratio', default=0.6, type=float, help='Ratio for keypoint matching.')
-    parser.add_argument('-f', '--focal_length', default=705, type=float, help='focal length of image.')
+    parser.add_argument('-r', '--match_ratio', default=0.8, type=float, help='Ratio for keypoint matching.')
+    parser.add_argument('-f', '--focal_length', default=0, type=float, help='focal length of image.')
+    parser.add_argument('-d', '--degree', default=0, type=float, help='rotation of image.')
     return parser
 ```
 
@@ -215,3 +216,4 @@ for i in range(rightHeight):
 
 ## References
 1. https://github.com/UWbadgers16/Panoramas
+2. https://gist.github.com/lxc-xx/7088609

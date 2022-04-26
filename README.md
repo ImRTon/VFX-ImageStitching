@@ -29,6 +29,7 @@ pip install -r requirements.txt
 -p --plot `True` / `False`\
 -r --match_ratio [0 ~ 1]\
 -f --focal_length FOCAL_LENGTH
+-d --degree IMAGE_ROTATION_DEGREE
 
 ```
 python main.py -i INPUT_DIR -f FOCAL_LENGTH
